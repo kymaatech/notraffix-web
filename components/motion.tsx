@@ -37,18 +37,19 @@ export function Item({ children, className = "", as = "div" }: { children: React
   );
 }
 
-/** Photo reveal: the frame opens upward while the image settles from a slight zoom. */
+/** Photo reveal: the frame opens upward while the image settles from a slight zoom.
+    The in-view trigger sits on the unclipped wrapper — a fully clipped element never
+    registers as visible, so observing the clipped layer itself would never fire. */
 export function ClipReveal({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <motion.div
-      className={className}
-      initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
-      whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 1.1, ease: EASE }}
-    >
-      <motion.div className="h-full w-full" initial={{ scale: 1.12 }} whileInView={{ scale: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 1.5, ease: EASE }}>
-        {children}
+    <motion.div className={className} initial="hide" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+      <motion.div
+        className="h-full w-full"
+        variants={{ hide: { clipPath: "inset(100% 0% 0% 0%)" }, show: { clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 1.1, ease: EASE } } }}
+      >
+        <motion.div className="relative h-full w-full" variants={{ hide: { scale: 1.12 }, show: { scale: 1, transition: { duration: 1.5, ease: EASE } } }}>
+          {children}
+        </motion.div>
       </motion.div>
     </motion.div>
   );

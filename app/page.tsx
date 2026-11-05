@@ -56,7 +56,7 @@ function Hero() {
           <nav aria-label="Popular solutions" className="hero-in hidden rounded-xl border border-white/15 bg-white/[0.08] p-2 backdrop-blur-md lg:col-span-5 lg:block [animation-delay:.45s]">
             {quick.map((s) => (
               <Link key={s.slug} href={`/solutions/${s.slug}`} className="group flex items-center gap-4 rounded-lg p-2 transition-colors hover:bg-white/10">
-                <Photo k={s.image} className="h-14 w-[72px] shrink-0 rounded-md" />
+                <Photo k={s.image} reveal={false} className="h-14 w-[72px] shrink-0 rounded-md" />
                 <span className="flex-1">
                   <span className="block text-[16px] text-white">{s.title}</span>
                   <span className="mt-0.5 block text-[13.5px] leading-snug text-white/60">{s.short.split(":")[0].split(",")[0]}</span>
