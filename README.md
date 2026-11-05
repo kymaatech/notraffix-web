@@ -32,3 +32,13 @@ Without keys, enquiries are only logged in the terminal, so previews still work.
 - `lib/site.ts`: name, contacts, fault line (all PLACEHOLDER until the client confirms)
 - `lib/content.ts`: solutions, process, projects (**projects are placeholders**), FAQ
 - `lib/enquiry.ts`: form options and validation rules
+
+## Email templates
+
+`lib/emails.ts` holds the two emails the enquiry form sends through Resend, each with HTML and plain-text versions:
+
+- **Team alert** (`teamEnquiryEmail`): goes to `ENQUIRY_TO`, with reply-to set to the customer. It has Reply and Call buttons, the details table and the message.
+- **Customer confirmation** (`customerConfirmationEmail`): banner, reference, what happens next, and the 24/7 fault line. Replies go to `ENQUIRY_REPLY_TO`, or the first `ENQUIRY_TO` address if that isn't set.
+
+Preview them locally at `/email-preview/team` and `/email-preview/confirmation` (add `?format=text` for the plain-text version). The preview is switched off in production unless `EMAIL_PREVIEW=on` is set.
+Images load from `/public/email` on the live domain, so they show in real emails once the site is deployed.
