@@ -7,7 +7,7 @@ import { Arrow } from "./ui";
 export function Footer() {
   return (
     <footer className="on-dark bg-ink text-white">
-      <div className="wrap pb-10 pt-20">
+      <div className="wrap pb-28 pt-20 sm:pb-32">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Logo light />
