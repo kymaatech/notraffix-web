@@ -1,0 +1,10 @@
+node_modules
+.next
+.env*.local
+.env
+*.tsbuildinfo
+*.tgz
+.snapshot.tgz
+# stand-in media is downloaded at dev/build time by scripts/fetch-media.mjs
+# (delete this line once the client's own media is added and should be committed)
+public/media
