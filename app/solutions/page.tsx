@@ -4,6 +4,7 @@ import { SOLUTIONS } from "@/lib/content";
 import { PageHero } from "@/components/PageHero";
 import { Arrow, Photo } from "@/components/ui";
 import { Closing } from "@/components/Closing";
+import { Reveal } from "@/components/motion";
 
 export const metadata: Metadata = { title: "Solutions", description: "Signal installation, adaptive control, bus and emergency priority, monitoring, roadworks signalling and parking guidance." };
 
@@ -20,7 +21,8 @@ export default function SolutionsPage() {
       <section className="py-20 sm:py-28">
         <div className="wrap space-y-5">
           {SOLUTIONS.map((s, i) => (
-            <Link key={s.slug} href={`/solutions/${s.slug}`} className="group grid overflow-hidden rounded-xl bg-white md:grid-cols-12">
+            <Reveal key={s.slug}>
+            <Link href={`/solutions/${s.slug}`} className="group grid overflow-hidden rounded-xl bg-white md:grid-cols-12">
               <Photo k={s.image} className={`aspect-[16/10] md:col-span-5 md:aspect-auto md:min-h-[340px] ${i % 2 ? "md:order-2" : ""}`} sizes="(min-width:820px) 42vw, 100vw" />
               <div className="flex flex-col justify-between gap-8 p-7 sm:p-10 md:col-span-7">
                 <div>
@@ -37,6 +39,7 @@ export default function SolutionsPage() {
                 </div>
               </div>
             </Link>
+            </Reveal>
           ))}
         </div>
       </section>

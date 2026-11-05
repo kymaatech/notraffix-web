@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MEDIA, m, type MediaKey } from "@/lib/media";
+import { ClipReveal, Reveal } from "./motion";
 
 export function Arrow({ className = "h-4 w-4", diagonal = false }: { className?: string; diagonal?: boolean }) {
   return (
@@ -29,16 +30,21 @@ export function Photo({
   className = "",
   priority = false,
   sizes,
+  reveal,
 }: {
   k: MediaKey;
   className?: string;
   priority?: boolean;
   sizes?: string;
+  reveal?: boolean;
 }) {
+  // In-flow photos open with a clip reveal; backgrounds and above-the-fold images don't.
+  const animate = reveal ?? (!priority && !className.includes("absolute"));
+  // eslint-disable-next-line @next/next/no-img-element
+  const img = <img src={m(k)} alt={MEDIA[k].alt} loading={priority ? "eager" : "lazy"} decoding="async" fetchPriority={priority ? "high" : "auto"} sizes={sizes} />;
   return (
     <div className={`frame ${className}`}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={m(k)} alt={MEDIA[k].alt} loading={priority ? "eager" : "lazy"} decoding="async" fetchPriority={priority ? "high" : "auto"} sizes={sizes} />
+      {animate ? <ClipReveal className="absolute inset-0">{img}</ClipReveal> : img}
     </div>
   );
 }
@@ -67,11 +73,11 @@ export function Film({ video, poster, className = "" }: { video: MediaKey; poste
 export function SectionTop({ label, children, action, dark = false }: { label: string; children: React.ReactNode; action?: React.ReactNode; dark?: boolean }) {
   return (
     <div className={`grid gap-6 lg:grid-cols-12 ${dark ? "on-dark" : ""}`}>
-      <p className="label lg:col-span-3 lg:pt-3">{label}</p>
-      <div className="lg:col-span-9">
+      <Reveal className="lg:col-span-3 lg:pt-3"><p className="label">{label}</p></Reveal>
+      <Reveal className="lg:col-span-9" delay={0.08}>
         {children}
         {action && <div className="mt-8">{action}</div>}
-      </div>
+      </Reveal>
     </div>
   );
 }

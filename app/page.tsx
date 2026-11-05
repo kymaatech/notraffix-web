@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Arrow, ArrowLink, Film, Photo, SectionTop, Tone } from "@/components/ui";
 import { Faq } from "@/components/Faq";
+import { DrawLine, HeroScroll, Item, Marquee, Parallax, Reveal, ScrollFill, Stagger } from "@/components/motion";
 import { FAQ, PROCESS, PROJECTS, SOLUTIONS } from "@/lib/content";
 import { Closing } from "@/components/Closing";
 
@@ -10,6 +11,7 @@ export default function Home() {
       <Hero />
       <Intro />
       <Solutions />
+      <Ticker />
       <ControlRoom />
       <Spotlight />
       <Process />
@@ -25,10 +27,15 @@ function Hero() {
   const quick = [SOLUTIONS[0], SOLUTIONS[1], SOLUTIONS[4]];
   return (
     <section className="on-dark relative isolate flex min-h-[640px] flex-col overflow-hidden bg-ink text-white h-[100svh]">
-      <Film video="heroVideo" poster="heroPoster" className="!absolute inset-0 -z-10 !bg-ink" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/55 to-ink/10" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-ink/50 to-transparent" />
-
+      <HeroScroll
+        media={
+          <>
+            <Film video="heroVideo" poster="heroPoster" className="h-full w-full !bg-ink" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/55 to-ink/10" />
+            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/50 to-transparent" />
+          </>
+        }
+      >
       <div className="wrap flex flex-1 flex-col justify-end pb-8 pt-28 sm:pb-10">
         <p className="hero-in text-[15px] text-white/75 [animation-delay:.05s]">Traffic signal systems for Nigerian cities</p>
         <h1 className="mt-5 text-hero">
@@ -73,6 +80,7 @@ function Hero() {
           ))}
         </dl>
       </div>
+      </HeroScroll>
     </section>
   );
 }
@@ -83,10 +91,10 @@ function Intro() {
     <section className="py-24 sm:py-32">
       <div className="wrap">
         <SectionTop label="Why Notraffix">
-          <Tone
+          <ScrollFill
             className="text-display max-w-[1000px]"
-            a="Most congestion isn't a road problem."
-            b="It's a timing problem. We fix it junction by junction, with signals that respond to the traffic actually there."
+            quietFrom={6}
+            text="Most congestion isn't a road problem. It's a timing problem. We fix it junction by junction, with signals that respond to the traffic actually there."
           />
         </SectionTop>
 
@@ -94,16 +102,16 @@ function Intro() {
           <Photo k="engineer" className="aspect-[4/5] rounded-xl lg:col-span-5" sizes="(min-width:1080px) 40vw, 100vw" />
           <div className="flex flex-col gap-5 lg:col-span-7">
             <Photo k="signalSky" className="aspect-[16/10] rounded-xl" sizes="(min-width:1080px) 55vw, 100vw" />
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div className="rounded-xl bg-white p-7">
+            <Stagger className="grid gap-5 sm:grid-cols-2">
+              <Item className="rounded-xl bg-white p-7">
                 <h3 className="text-[22px] tracking-[-0.03em]">Hardware that suits the climate</h3>
                 <p className="mt-3 text-[16px] leading-relaxed text-body">Controllers, heads and cabinets specified for heat, dust and heavy rain, with backup power on every junction.</p>
-              </div>
-              <div className="rounded-xl bg-white p-7">
+              </Item>
+              <Item className="rounded-xl bg-white p-7">
                 <h3 className="text-[22px] tracking-[-0.03em]">Engineers who stay on</h3>
                 <p className="mt-3 text-[16px] leading-relaxed text-body">The team that surveys and installs your junctions also monitors and maintains them afterwards.</p>
-              </div>
-            </div>
+              </Item>
+            </Stagger>
           </div>
         </div>
       </div>
@@ -119,9 +127,10 @@ function Solutions() {
         <SectionTop label="Solutions" action={<ArrowLink href="/solutions">All solutions</ArrowLink>}>
           <Tone className="text-display max-w-[900px]" a="Everything a junction needs," b="from the pole to the control room." />
         </SectionTop>
-        <div className="mt-16 grid gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <Stagger className="mt-16 grid gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {SOLUTIONS.map((s) => (
-            <Link key={s.slug} href={`/solutions/${s.slug}`} className="group block">
+            <Item key={s.slug}>
+            <Link href={`/solutions/${s.slug}`} className="group block">
               <Photo k={s.image} className="aspect-[4/3] rounded-xl" sizes="(min-width:1080px) 30vw, (min-width:640px) 45vw, 100vw" />
               <div className="mt-5 flex items-start justify-between gap-4">
                 <div>
@@ -133,8 +142,9 @@ function Solutions() {
                 </span>
               </div>
             </Link>
+            </Item>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
@@ -144,29 +154,31 @@ function Solutions() {
 function ControlRoom() {
   return (
     <section className="on-dark relative isolate overflow-hidden bg-ink text-white">
-      <Film video="controlVideo" poster="controlPoster" className="!absolute inset-0 -z-10" />
+      <Parallax>
+        <Film video="controlVideo" poster="controlPoster" className="h-full w-full" />
+      </Parallax>
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/90 via-ink/60 to-ink/20" />
       <div className="wrap flex min-h-[760px] flex-col justify-between py-24 sm:py-28">
-        <div className="max-w-[720px]">
+        <Reveal className="max-w-[720px]">
           <p className="label">Monitoring and control</p>
           <Tone className="mt-5 text-display" a="One control room" b="for every junction you own." />
           <p className="mt-7 max-w-[520px] text-lead text-white/70">
             Phase state, queues and faults for the whole network on one screen. Engineers can re-time a corridor or push an incident plan in seconds, without a site visit.
           </p>
           <div className="mt-9"><Link href="/solutions/monitoring" className="btn-light">How monitoring works <Arrow /></Link></div>
-        </div>
-        <div className="mt-16 grid gap-px overflow-hidden rounded-xl bg-white/15 sm:grid-cols-3">
+        </Reveal>
+        <Stagger className="mt-16 grid gap-px overflow-hidden rounded-xl bg-white/15 sm:grid-cols-3">
           {[
             ["Faults raised in seconds", "Lamp, controller and power faults alert our team day and night."],
             ["Plans pushed remotely", "Timing plans are scheduled, changed and rolled back from the console."],
             ["Data you can use", "Counts, delays and incidents in monthly reports and an open API."],
           ].map(([t, d]) => (
-            <div key={t} className="bg-ink/70 p-6 backdrop-blur-md">
+            <Item key={t} className="bg-ink/70 p-6 backdrop-blur-md">
               <h3 className="text-[19px] tracking-[-0.02em]">{t}</h3>
               <p className="mt-2 text-[15px] leading-relaxed text-white/60">{d}</p>
-            </div>
+            </Item>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
@@ -187,20 +199,20 @@ function Spotlight() {
                 <Photo k={s.gallery[1]} className="flex-1 rounded-xl" sizes="25vw" />
               </div>
             </div>
-            <div className="lg:col-span-5">
+            <Reveal className="lg:col-span-5">
               <p className="label">{s.title}</p>
               <Tone className="mt-4 text-title" a={s.heading[0]} b={s.heading[1]} />
               <p className="mt-6 text-[17px] leading-relaxed text-body">{s.intro}</p>
-              <dl className="mt-8 border-t border-line">
+              <Stagger as="dl" className="mt-8 border-t border-line" gap={0.05}>
                 {s.specs.slice(0, 4).map(([k, v]) => (
-                  <div key={k} className="flex justify-between gap-6 border-b border-line py-3.5 text-[15.5px]">
+                  <Item key={k} className="flex justify-between gap-6 border-b border-line py-3.5 text-[15.5px]">
                     <dt className="text-body">{k}</dt>
                     <dd className="text-right text-ink">{v}</dd>
-                  </div>
+                  </Item>
                 ))}
-              </dl>
+              </Stagger>
               <div className="mt-8"><ArrowLink href={`/solutions/${s.slug}`}>Read more about {s.title.toLowerCase()}</ArrowLink></div>
-            </div>
+            </Reveal>
           </div>
         ))}
       </div>
@@ -216,18 +228,19 @@ function Process() {
         <SectionTop label="How a project runs">
           <Tone className="text-display max-w-[900px]" a="From the first count" b="to years of monitored operation." />
         </SectionTop>
-        <ol className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <DrawLine className="mt-16 hidden h-px bg-ink lg:block" />
+        <Stagger as="ol" gap={0.12} className="mt-16 grid gap-5 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4">
           {PROCESS.map((p, i) => (
-            <li key={p.title} className="flex flex-col">
+            <Item as="li" key={p.title} className="flex flex-col">
               <Photo k={p.image} className="aspect-[4/3] rounded-xl" sizes="(min-width:1080px) 23vw, 45vw" />
               <div className="mt-5 flex items-baseline gap-3">
                 <span className="text-[15px] text-muted">Step {i + 1}</span>
               </div>
               <h3 className="mt-1 text-[26px] tracking-[-0.035em]">{p.title}</h3>
               <p className="mt-2 text-[16px] leading-relaxed text-body">{p.text}</p>
-            </li>
+            </Item>
           ))}
-        </ol>
+        </Stagger>
       </div>
     </section>
   );
@@ -251,9 +264,10 @@ function Projects() {
               <p className="mt-2 max-w-[460px] text-[15.5px] text-white/70">{a.summary}</p>
             </div>
           </Link>
-          <div className="grid gap-5 lg:col-span-5">
+          <Stagger className="grid gap-5 lg:col-span-5" gap={0.1}>
             {rest.map((p) => (
-              <Link key={p.name} href="/projects" className="group grid grid-cols-5 gap-5 rounded-xl bg-white p-3">
+              <Item key={p.name}>
+              <Link href="/projects" className="group grid h-full grid-cols-5 gap-5 rounded-xl bg-white p-3">
                 <Photo k={p.image} className="col-span-2 aspect-square rounded-lg" sizes="20vw" />
                 <div className="col-span-3 flex flex-col justify-between py-2 pr-2">
                   <div>
@@ -263,8 +277,9 @@ function Projects() {
                   <p className="text-[14.5px] text-body">{p.place}, {p.scale}</p>
                 </div>
               </Link>
+              </Item>
             ))}
-          </div>
+          </Stagger>
         </div>
       </div>
     </section>
@@ -285,6 +300,18 @@ function Questions() {
         </div>
         <div className="lg:col-span-8"><Faq items={FAQ} /></div>
       </div>
+    </section>
+  );
+}
+
+/* ── Ticker between sections ── */
+function Ticker() {
+  return (
+    <section aria-label="What we do" className="border-y border-line bg-white py-8">
+      <Marquee
+        className="text-[clamp(2rem,4.4vw,3.75rem)] tracking-[-0.04em] text-ink"
+        items={["Signal installation", "Adaptive control", "Bus and emergency priority", "Monitoring and data", "Roadworks signalling", "Parking guidance"]}
+      />
     </section>
   );
 }

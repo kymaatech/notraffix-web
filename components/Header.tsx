@@ -12,10 +12,20 @@ import { Arrow } from "./ui";
 export function Header() {
   const path = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 40);
+    let last = window.scrollY;
+    const on = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      // hide while reading downwards, return on any upward scroll
+      if (Math.abs(y - last) > 6) {
+        setHidden(y > last && y > 400);
+        last = y;
+      }
+    };
     on();
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
@@ -26,7 +36,9 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 px-3 pt-3 transition-transform duration-500 ease-out sm:px-5 sm:pt-4 ${hidden && !open ? "-translate-y-[120%]" : ""}`}
+    >
       <div
         className={`mx-auto flex h-[60px] max-w-site items-center justify-between rounded-full pl-5 pr-2 transition-all duration-300 ${
           scrolled || open ? "bg-white/95 shadow-[0_8px_30px_-12px_rgb(0_0_0/.25)] backdrop-blur-md" : "bg-white/90 backdrop-blur-md"

@@ -3,6 +3,7 @@ import { SITE } from "@/lib/site";
 import { PageHero } from "@/components/PageHero";
 import { Closing } from "@/components/Closing";
 import { Film, Photo, Tone } from "@/components/ui";
+import { Item, Parallax, Reveal, ScrollFill, Stagger } from "@/components/motion";
 
 export const metadata: Metadata = { title: "Company", description: `About ${SITE.name}.` };
 
@@ -20,13 +21,13 @@ export default function AboutPage() {
 
       <section className="py-24 sm:py-32">
         <div className="wrap grid gap-14 lg:grid-cols-12">
-          <div className="lg:col-span-6">
+          <Reveal className="lg:col-span-6">
             <Tone className="text-title" a="Give every road" b="its full capacity." />
             <div className="mt-8 space-y-5 text-[17px] leading-relaxed text-body">
               <p>Most congestion isn't caused by too little road. It comes from junctions running on timings written for traffic that no longer exists, or on no timings at all.</p>
               <p>We combine signal hardware built for the climate, adaptive software and a round-the-clock operations team. The engineers who survey and install a junction are the ones who keep it running afterwards.</p>
             </div>
-          </div>
+          </Reveal>
           <div className="grid grid-cols-2 gap-4 lg:col-span-6">
             <Photo k="engineer" className="aspect-[3/4] rounded-xl" sizes="25vw" />
             <Photo k="wiring" className="mt-12 aspect-[3/4] rounded-xl" sizes="25vw" />
@@ -35,24 +36,24 @@ export default function AboutPage() {
       </section>
 
       <section className="on-dark relative isolate overflow-hidden bg-ink text-white">
-        <Film video="nightVideo" poster="nightPoster" className="!absolute inset-0 -z-10" />
+        <Parallax><Film video="nightVideo" poster="nightPoster" className="h-full w-full" /></Parallax>
         <div className="absolute inset-0 -z-10 bg-ink/70" />
         <div className="wrap flex min-h-[560px] items-end py-20">
-          <Tone className="max-w-[900px] text-display" a="Day and night," b="someone is watching every junction we run." />
+          <ScrollFill className="max-w-[900px] text-display" text="Day and night, someone is watching every junction we run." />
         </div>
       </section>
 
       <section className="bg-white py-24 sm:py-32">
         <div className="wrap">
           <Tone className="max-w-[800px] text-title" a="Who we work with." />
-          <div className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2">
+          <Stagger className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2">
             {CLIENTS.map((c) => (
-              <div key={c.t} className="border-t border-ink pt-6">
+              <Item key={c.t} className="border-t border-ink pt-6">
                 <h3 className="text-[24px] tracking-[-0.03em]">{c.t}</h3>
                 <p className="mt-3 max-w-[460px] text-[16.5px] leading-relaxed text-body">{c.d}</p>
-              </div>
+              </Item>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
       <Closing />
