@@ -10,9 +10,9 @@ export type MediaItem = { file: string; src: string; alt: string };
 
 export const MEDIA = {
   // ── video ───────────────────────────────────────────────
-  heroVideo: { file: "hero-roundabout.mp4", src: "https://videos.pexels.com/video-files/28925676/12518919_1920_1080_30fps.mp4", alt: "" },
+  heroVideo: { file: "hero-roundabout-720.mp4", src: "https://videos.pexels.com/video-files/28925676/12518918_1280_720_30fps.mp4", alt: "" },
   heroPoster: { file: "hero-roundabout.jpg", src: "https://images.pexels.com/videos/28925676/africa-african-city-buildings-busy-intersection-28925676.jpeg?auto=compress&w=1920", alt: "Aerial view of a busy roundabout in a Nigerian city" },
-  controlVideo: { file: "control-room.mp4", src: "https://videos.pexels.com/video-files/38779100/16477693_1920_1080_25fps.mp4", alt: "" },
+  controlVideo: { file: "control-room-720.mp4", src: "https://videos.pexels.com/video-files/38779100/16477681_1280_720_25fps.mp4", alt: "" },
   controlPoster: { file: "control-room.jpg", src: "https://images.pexels.com/videos/38779100/auckland-big-screen-cctv-cctv-feed-38779100.jpeg?auto=compress&w=1920", alt: "Operators in a traffic management control room with a wall of camera feeds" },
   nightVideo: { file: "night-signal.mp4", src: "https://videos.pexels.com/video-files/38004389/16128687_1280_720_30fps.mp4", alt: "" },
   nightPoster: { file: "night-signal.jpg", src: "https://images.pexels.com/videos/38004389/pexels-photo-38004389.jpeg?auto=compress&w=1600", alt: "Cars waiting at a red signal at night" },

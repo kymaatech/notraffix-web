@@ -15,7 +15,7 @@ If PowerShell blocks npm scripts, use `npm.cmd install` / `npm.cmd run dev`.
 
 All photographs and video are listed in **`lib/media.ts`**. The stand-ins are free-licence Pexels files (no attribution needed). `scripts/fetch-media.mjs` downloads anything missing into `public/media` before `dev` and `build`.
 
-To use the client's own footage, drop a file into `public/media` with the same name (e.g. `hero-roundabout.mp4`), or change the entry's `src`. Keep hero video under ~15 MB (1920×1080, H.264, no audio).
+To use the client's own footage, drop a file into `public/media` with the same name (e.g. `hero-roundabout.mp4`), or change the entry's `src`. Keep background videos small: 1280×720, H.264, no audio, ideally under 8 MB.
 
 ## Enquiries (Supabase + Resend)
 
