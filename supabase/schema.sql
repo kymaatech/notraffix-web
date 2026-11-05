@@ -18,6 +18,7 @@ create table if not exists public.enquiries (
   location     text not null,
   scale        text,
   timeline     text,
+  kit          text,
   message      text not null,
   source_ip    text,
   user_agent   text
@@ -30,3 +31,6 @@ create index if not exists enquiries_status_idx on public.enquiries (status);
 alter table public.enquiries enable row level security;
 -- No policies are created on purpose: anon and authenticated users get no access.
 -- Add a select policy later if you build an admin dashboard for signed-in staff.
+
+-- If you already created the table before solar systems were added:
+-- alter table public.enquiries add column if not exists kit text;

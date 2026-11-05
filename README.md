@@ -42,3 +42,14 @@ Without keys, enquiries are only logged in the terminal, so previews still work.
 
 Preview them locally at `/email-preview/team` and `/email-preview/confirmation` (add `?format=text` for the plain-text version). The preview is switched off in production unless `EMAIL_PREVIEW=on` is set.
 Images load from `/public/email` on the live domain, so they show in real emails once the site is deployed.
+
+## Solar systems (`/solar`)
+
+The six solar junction systems from the technical partner live in **`lib/solar.ts`**: kit contents, specifications and controller features. The partner's name, model numbers, prices and photos are deliberately left out. Every visual on the page is drawn in code (`components/solar/`):
+
+- `JunctionPlan`: animated top-down plan for each system (3-way or 4-way, cantilever or post poles, ball, arrow or countdown heads)
+- `Art`: signal, countdown, pedestrian and controller drawings, plus the day/night solar pole scene
+- `KitExplorer`: the system picker; each system can be linked directly, e.g. `/solar#t-junction-compact`
+- `PlanWeek`: the controller's weekly timing-plan chart
+
+Each "Request a quote" button opens `/enquiry?service=solar-systems&kit=<slug>`. The chosen system is saved in the `kit` column (see `supabase/schema.sql`) and shown in both emails.

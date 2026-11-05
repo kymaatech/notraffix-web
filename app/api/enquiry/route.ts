@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { validate, type Enquiry } from "@/lib/enquiry";
-import { SOLUTIONS } from "@/lib/content";
+import { KIT_OPTIONS, SERVICE_OPTIONS, validate, type Enquiry } from "@/lib/enquiry";
 import { SITE } from "@/lib/site";
 import { customerConfirmationEmail, teamEnquiryEmail } from "@/lib/emails";
 
@@ -37,7 +36,7 @@ export async function POST(req: Request) {
   if (raw.website) return NextResponse.json({ ok: true }); // honeypot
 
   const str = (k: string, max: number) => String(raw[k] ?? "").trim().slice(0, max);
-  const validSlugs = new Set(SOLUTIONS.map((s) => s.slug));
+  const validSlugs = new Set(SERVICE_OPTIONS.map((s) => s.slug));
   const e: Enquiry = {
     name: str("name", 120),
     email: str("email", 160).toLowerCase(),
@@ -48,6 +47,7 @@ export async function POST(req: Request) {
     location: str("location", 200),
     scale: str("scale", 60),
     timeline: str("timeline", 60),
+    kit: KIT_OPTIONS.some((k) => k.slug === raw.kit) ? String(raw.kit) : undefined,
     message: str("message", 5000),
     consent: raw.consent === true,
   };
@@ -55,7 +55,8 @@ export async function POST(req: Request) {
   const errors = validate(e);
   if (Object.keys(errors).length) return NextResponse.json({ error: "Some fields need attention.", fields: errors }, { status: 422 });
 
-  const serviceNames = e.services.map((s) => SOLUTIONS.find((x) => x.slug === s)?.title ?? s);
+  const serviceNames = e.services.map((s) => SERVICE_OPTIONS.find((x) => x.slug === s)?.title ?? s);
+  const kitName = e.kit ? KIT_OPTIONS.find((k) => k.slug === e.kit)?.title : undefined;
 
   // ── 2. Supabase ──────────────────────────────────────────
   const sbUrl = process.env.SUPABASE_URL;
@@ -75,6 +76,7 @@ export async function POST(req: Request) {
         location: e.location,
         scale: e.scale || null,
         timeline: e.timeline || null,
+        kit: e.kit || null,
         message: e.message,
         source_ip: ip,
         user_agent: req.headers.get("user-agent")?.slice(0, 300) ?? null,
@@ -93,7 +95,7 @@ export async function POST(req: Request) {
   const to = process.env.ENQUIRY_TO;
   const from = process.env.ENQUIRY_FROM || `${SITE.name} <onboarding@resend.dev>`;
   if (rk && to) {
-    const data = { ...e, services: serviceNames, reference: reference || undefined, receivedAt: new Date() };
+    const data = { ...e, kit: kitName, services: serviceNames, reference: reference || undefined, receivedAt: new Date() };
     const team = teamEnquiryEmail(data);
     const confirm = customerConfirmationEmail(data);
 

@@ -32,6 +32,9 @@ export const MEDIA = {
   parking: { file: "parking-aerial.jpg", src: px(5231181), alt: "Aerial view of a car park" },
   lagosRoad: { file: "lagos-road.jpg", src: "https://images.pexels.com/videos/29103994/africa-apartments-blue-sky-buildings-29103994.jpeg?auto=compress&w=1920", alt: "Aerial view of a busy road in Lagos" },
   lagosBridge: { file: "lagos-bridge.jpg", src: "https://images.pexels.com/videos/30227326/4k-drone-shot-africa-africa-travel-african-30227326.jpeg?auto=compress&w=1920", alt: "Aerial view of a bridge over the lagoon in Lagos" },
+  solarInstaller: { file: "solar-installer.jpg", src: px(30285845), alt: "Technician in a hi-vis vest installing a solar panel" },
+  solarPanels: { file: "solar-panels-sky.jpg", src: px(27873610), alt: "Solar panels angled towards the sky" },
+  solarCells: { file: "solar-cells.jpg", src: px(8853509), alt: "Close-up of solar cells" },
   intersection: { file: "intersection-aerial.jpg", src: "https://images.pexels.com/videos/32521835/pexels-photo-32521835.jpeg?auto=compress&w=1920", alt: "Top-down view of a signalised intersection" },
 } satisfies Record<string, MediaItem>;
 

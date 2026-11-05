@@ -4,6 +4,8 @@ import { Faq } from "@/components/Faq";
 import { DrawLine, HeroScroll, Item, Marquee, Parallax, Reveal, ScrollFill, Stagger } from "@/components/motion";
 import { FAQ, PROCESS, PROJECTS, SOLUTIONS } from "@/lib/content";
 import { Closing } from "@/components/Closing";
+import { SolarPoleScene } from "@/components/solar/Art";
+import { KITS } from "@/lib/solar";
 
 export default function Home() {
   return (
@@ -12,6 +14,7 @@ export default function Home() {
       <Intro />
       <Solutions />
       <Ticker />
+      <SolarBand />
       <ControlRoom />
       <Spotlight />
       <Process />
@@ -310,8 +313,39 @@ function Ticker() {
     <section aria-label="What we do" className="border-y border-line bg-white py-8">
       <Marquee
         className="text-[clamp(2rem,4.4vw,3.75rem)] tracking-[-0.04em] text-ink"
-        items={["Signal installation", "Adaptive control", "Bus and emergency priority", "Monitoring and data", "Roadworks signalling", "Parking guidance"]}
+        items={["Solar signal systems", "Signal installation", "Adaptive control", "Bus and emergency priority", "Monitoring and data", "Roadworks signalling", "Parking guidance"]}
       />
+    </section>
+  );
+}
+
+/* ── Solar systems feature ── */
+function SolarBand() {
+  return (
+    <section className="py-24 sm:py-32">
+      <div className="wrap grid items-center gap-12 lg:grid-cols-12">
+        <Reveal className="lg:col-span-6">
+          <SolarPoleScene className="block h-auto w-full max-w-[560px]" />
+        </Reveal>
+        <Reveal className="lg:col-span-6" delay={0.1}>
+          <p className="label">Solar signal systems</p>
+          <Tone className="mt-4 text-display" a="No power at the junction?" b="Bring the sun." />
+          <p className="mt-6 max-w-[520px] text-lead text-body">
+            Complete off-grid signal systems for three- and four-way junctions. Solar panels, batteries and a wireless controller on every pole, so the lights keep running whatever the grid is doing.
+          </p>
+          <ul className="mt-8 grid gap-2 sm:grid-cols-2">
+            {KITS.map((k) => (
+              <li key={k.slug}>
+                <Link href={`/solar#${k.slug}`} className="group flex items-center justify-between gap-3 rounded-lg bg-white px-4 py-3 text-[15px] transition-colors hover:bg-ink hover:text-white">
+                  <span>{k.name}</span>
+                  <span className="text-[13px] text-muted group-hover:text-white/60">{k.type}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-8"><Link href="/solar" className="btn-ink">Explore solar systems <Arrow /></Link></div>
+        </Reveal>
+      </div>
     </section>
   );
 }

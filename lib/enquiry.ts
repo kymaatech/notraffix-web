@@ -1,4 +1,12 @@
 /* Shared enquiry schema — used by the form (client) and the API route (server). */
+import { SOLUTIONS } from "./content";
+import { KITS } from "./solar";
+
+export const SERVICE_OPTIONS = [
+  { slug: "solar-systems", title: "Solar signal systems" },
+  ...SOLUTIONS.map((s) => ({ slug: s.slug, title: s.title })),
+];
+export const KIT_OPTIONS = KITS.map((k) => ({ slug: k.slug, title: `${k.name} (${k.type})` }));
 
 export const ORG_TYPES = [
   "State or federal road authority",
@@ -22,6 +30,7 @@ export type Enquiry = {
   location: string;
   scale: string;
   timeline: string;
+  kit?: string;
   message: string;
   consent: boolean;
 };

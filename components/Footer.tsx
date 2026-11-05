@@ -15,6 +15,7 @@ export function Footer() {
             <Link href="/enquiry" className="btn-signal mt-8">Make an enquiry <Arrow /></Link>
           </div>
           <Col title="Solutions" className="lg:col-span-3">
+            <FLink href="/solar">Solar signal systems</FLink>
             {SOLUTIONS.map((s) => <FLink key={s.slug} href={`/solutions/${s.slug}`}>{s.title}</FLink>)}
           </Col>
           <Col title="Company" className="lg:col-span-2">

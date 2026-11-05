@@ -3,16 +3,20 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
-import { SOLUTIONS } from "@/lib/content";
-import { ORG_TYPES, SCALES, TIMELINES, validate, type Enquiry, type FieldErrors } from "@/lib/enquiry";
+import { KIT_OPTIONS, ORG_TYPES, SCALES, SERVICE_OPTIONS, TIMELINES, validate, type Enquiry, type FieldErrors } from "@/lib/enquiry";
 import { Arrow } from "./ui";
 
-const EMPTY: Enquiry = { name: "", email: "", phone: "", organisation: "", orgType: "", services: [], location: "", scale: "", timeline: "", message: "", consent: false };
+const EMPTY: Enquiry = { name: "", email: "", phone: "", organisation: "", orgType: "", services: [], location: "", scale: "", timeline: "", kit: "", message: "", consent: false };
 
 export function EnquiryForm() {
   const params = useSearchParams();
   const pre = params.get("service");
-  const [v, setV] = useState<Enquiry>({ ...EMPTY, services: pre && SOLUTIONS.some((s) => s.slug === pre) ? [pre] : [] });
+  const preKit = params.get("kit");
+  const [v, setV] = useState<Enquiry>({
+    ...EMPTY,
+    services: pre && SERVICE_OPTIONS.some((s) => s.slug === pre) ? [pre] : [],
+    kit: preKit && KIT_OPTIONS.some((k) => k.slug === preKit) ? preKit : "",
+  });
   const [touched, setTouched] = useState<Partial<Record<keyof Enquiry, boolean>>>({});
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -97,7 +101,7 @@ export function EnquiryForm() {
         <div>
           <p id="services-label" className="mb-3 text-[15px] font-medium">What do you need help with? <span className="text-stop">*</span></p>
           <div role="group" aria-labelledby="services-label" aria-describedby={err("services") ? "services-err" : undefined} className="flex flex-wrap gap-2">
-            {SOLUTIONS.map((s, i) => {
+            {SERVICE_OPTIONS.map((s, i) => {
               const on = v.services.includes(s.slug);
               return (
                 <button
@@ -115,6 +119,16 @@ export function EnquiryForm() {
           </div>
           {err("services") && <p id="services-err" role="alert" className="mt-2 text-[14px] text-stop">{err("services")}</p>}
         </div>
+        {v.services.includes("solar-systems") && (
+          <label htmlFor="f-kit" className="block">
+            <span className="mb-2 block text-[15px] font-medium">Which solar system?</span>
+            <select id="f-kit" value={v.kit} onChange={(e) => set("kit", e.target.value)} className="field">
+              <option value="">Not sure yet, please advise</option>
+              {KIT_OPTIONS.map((k) => <option key={k.slug} value={k.slug}>{k.title}</option>)}
+            </select>
+            <p className="mt-2 text-[14px] text-muted"><Link href="/solar#systems" className="link-u text-ink">Compare the six systems</Link></p>
+          </label>
+        )}
         <Text k="location" label="Where is the site?" required placeholder="City, road or junction" v={v} set={set} blur={blur} err={err("location")} />
         <div className="grid gap-5 sm:grid-cols-2">
           <Select k="scale" label="Size of the job" options={SCALES} v={v} set={set} blur={blur} />

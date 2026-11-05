@@ -15,6 +15,7 @@ export type EnquiryEmailData = {
   location: string;
   scale?: string;
   timeline?: string;
+  kit?: string; // display name of a chosen solar system
   message: string;
   receivedAt?: Date;
 };
@@ -116,6 +117,7 @@ export function teamEnquiryEmail(d: EnquiryEmailData) {
               ["Phone", d.phone ? `<a href="${tel(d.phone)}" style="color:${C.ink}">${esc(d.phone)}</a>` : "—"],
               ["Organisation type", esc(d.orgType)],
               ["Needs", esc(d.services.join(", "))],
+              ...(d.kit ? ([["System", esc(d.kit)]] as [string, string][]) : []),
               ["Site", esc(d.location)],
               ["Size of job", esc(d.scale || "—")],
               ["Timeline", esc(d.timeline || "—")],
@@ -141,6 +143,7 @@ export function teamEnquiryEmail(d: EnquiryEmailData) {
     `Org type:   ${d.orgType}`,
     `Size:       ${d.scale || "—"}`,
     `Timeline:   ${d.timeline || "—"}`,
+    ...(d.kit ? [`System:     ${d.kit}`] : []),
     "",
     "Message:",
     d.message,
