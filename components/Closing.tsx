@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SITE } from "@/lib/site";
+import { SITE, tel } from "@/lib/site";
 import { Arrow, Photo } from "./ui";
 import { Parallax, Reveal } from "./motion";
 
@@ -15,10 +15,10 @@ export function Closing() {
             <h2 className="mt-5 max-w-[760px] text-display">
               Start with one junction. <span className="tone">We'll show you the minutes it gives back.</span>
             </h2>
-            <p className="mt-7 max-w-[520px] text-lead text-white/70">Tell us where it is and what's going wrong. A traffic engineer replies within two working days.</p>
+            <p className="mt-7 max-w-[520px] text-lead text-white/70">Tell us where it is and what's going wrong. Our team replies {SITE.replyTime}.</p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Link href="/enquiry" className="btn-signal">Make an enquiry <Arrow /></Link>
-              <a href={`tel:${SITE.phone.replace(/\s/g, "")}`} className="btn-glass">Call {SITE.phone}</a>
+              <a href={tel(SITE.phone)} className="btn-glass">Call {SITE.phone}</a>
             </div>
           </Reveal>
         </div>

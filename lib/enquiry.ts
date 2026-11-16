@@ -9,16 +9,16 @@ export const SERVICE_OPTIONS = [
 export const KIT_OPTIONS = KITS.map((k) => ({ slug: k.slug, title: `${k.name} (${k.type})` }));
 
 export const ORG_TYPES = [
-  "State or federal road authority",
+  "Federal government or agency",
+  "State government or road authority",
   "Local government",
   "Construction contractor",
   "Estate, campus or developer",
   "Port, airport or logistics",
+  "Individual or philanthropist",
   "Other",
 ] as const;
 
-export const SCALES = ["One junction", "2 to 10 junctions", "More than 10", "A work zone or event", "Not sure yet"] as const;
-export const TIMELINES = ["As soon as possible", "Within 3 months", "3 to 12 months", "Just exploring"] as const;
 
 export type Enquiry = {
   name: string;
@@ -28,8 +28,6 @@ export type Enquiry = {
   orgType: string;
   services: string[];
   location: string;
-  scale: string;
-  timeline: string;
   kit?: string;
   message: string;
   consent: boolean;

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { NAV, SITE } from "@/lib/site";
+import { NAV, SITE, tel } from "@/lib/site";
 import { Logo } from "./Logo";
 import { Arrow } from "./ui";
 
@@ -88,8 +88,8 @@ export function Header() {
             </Link>
           ))}
           <div className="mt-auto text-[15px] text-body">
-            <p>24/7 fault line</p>
-            <a href={`tel:${SITE.faultLine.replace(/\s/g, "")}`} className="text-[20px] text-ink">{SITE.faultLine}</a>
+            <p>Call us, {SITE.hours}</p>
+            <a href={tel(SITE.phone)} className="text-[20px] text-ink">{SITE.phone}</a>
           </div>
         </div>
       )}

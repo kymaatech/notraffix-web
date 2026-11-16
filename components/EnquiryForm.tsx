@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
-import { KIT_OPTIONS, ORG_TYPES, SCALES, SERVICE_OPTIONS, TIMELINES, validate, type Enquiry, type FieldErrors } from "@/lib/enquiry";
+import { KIT_OPTIONS, ORG_TYPES, SERVICE_OPTIONS, validate, type Enquiry, type FieldErrors } from "@/lib/enquiry";
 import { Arrow } from "./ui";
 
-const EMPTY: Enquiry = { name: "", email: "", phone: "", organisation: "", orgType: "", services: [], location: "", scale: "", timeline: "", kit: "", message: "", consent: false };
+const EMPTY: Enquiry = { name: "", email: "", phone: "", organisation: "", orgType: "", services: [], location: "", kit: "", message: "", consent: false };
 
 export function EnquiryForm() {
   const params = useSearchParams();
@@ -71,7 +71,7 @@ export function EnquiryForm() {
         </span>
         <h2 className="mt-8 text-title">Enquiry sent.</h2>
         <p className="mt-4 max-w-[460px] text-[17px] leading-relaxed text-body">
-          Thanks, {v.name.split(" ")[0]}. A traffic engineer will reply to {v.email} within two working days{reference ? `. Your reference is ${reference}` : ""}.
+          Thanks, {v.name.split(" ")[0]}. Our customer service team will reply to {v.email} within two working days{reference ? `. Your reference is ${reference}` : ""}.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/solutions" className="btn-ink">Browse solutions</Link>
@@ -130,10 +130,6 @@ export function EnquiryForm() {
           </label>
         )}
         <Text k="location" label="Where is the site?" required placeholder="City, road or junction" v={v} set={set} blur={blur} err={err("location")} />
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Select k="scale" label="Size of the job" options={SCALES} v={v} set={set} blur={blur} />
-          <Select k="timeline" label="When do you need it?" options={TIMELINES} v={v} set={set} blur={blur} />
-        </div>
         <label className="block">
           <span className="mb-2 block text-[15px] font-medium">Tell us about it <span className="text-stop">*</span></span>
           <textarea
@@ -205,7 +201,7 @@ function Text({ k, type = "text", placeholder, autoComplete, ...c }: Common & { 
   );
 }
 
-function Select({ k, options, ...c }: Common & { k: "orgType" | "scale" | "timeline"; options: readonly string[] }) {
+function Select({ k, options, ...c }: Common & { k: "orgType"; options: readonly string[] }) {
   const id = `f-${k}`;
   return (
     <label htmlFor={id} className="block">

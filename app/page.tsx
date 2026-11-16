@@ -6,6 +6,7 @@ import { FAQ, PROCESS, PROJECTS, SOLUTIONS } from "@/lib/content";
 import { Closing } from "@/components/Closing";
 import { SolarPoleScene } from "@/components/solar/Art";
 import { KITS } from "@/lib/solar";
+import { TEAM } from "@/lib/team";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <Spotlight />
       <Process />
       <Projects />
+      <Leadership />
       <Questions />
       <Closing />
     </>
@@ -74,7 +76,7 @@ function Hero() {
           {[
             ["Survey to maintenance", "One team from the first count to years of operation"],
             ["Built for the grid we have", "Battery and solar backup on every controller"],
-            ["24/7 fault line", "Engineers dispatched the moment a junction reports a fault"],
+            ["Global partners, local delivery", "Proven international technology, installed and maintained here"],
           ].map(([k, v]) => (
             <div key={k} className="flex flex-col">
               <dt className="text-white">{k}</dt>
@@ -345,6 +347,33 @@ function SolarBand() {
           </ul>
           <div className="mt-8"><Link href="/solar" className="btn-ink">Explore solar systems <Arrow /></Link></div>
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ── Leadership teaser ── */
+function Leadership() {
+  return (
+    <section className="py-24 sm:py-32">
+      <div className="wrap">
+        <SectionTop label="Leadership" action={<ArrowLink href="/about#leadership">Meet the team</ArrowLink>}>
+          <Tone className="text-display max-w-[900px]" a="Led by people who have" b="built, planned and governed infrastructure." />
+        </SectionTop>
+        <Stagger className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          {TEAM.map((p) => (
+            <Item key={p.slug}>
+              <Link href="/about#leadership" className="group block">
+                <div className="frame aspect-[4/5] rounded-xl">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.photo} alt={`Portrait of ${p.name}`} loading="lazy" decoding="async" className="lg:grayscale lg:transition-[filter,transform] lg:duration-700 lg:group-hover:grayscale-0" />
+                </div>
+                <p className="mt-4 text-[18px] leading-tight tracking-[-0.025em]">{p.name}</p>
+                <p className="mt-1 text-[14px] text-muted">{p.role}</p>
+              </Link>
+            </Item>
+          ))}
+        </Stagger>
       </div>
     </section>
   );

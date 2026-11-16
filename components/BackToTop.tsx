@@ -33,7 +33,7 @@ export function BackToTop() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 16, scale: 0.9 }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="group fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-ink text-white shadow-[0_12px_30px_-10px_rgb(0_0_0/.5)] transition-colors hover:bg-signal hover:text-ink sm:bottom-8 sm:right-8"
+          className="group fixed bottom-[88px] right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-ink text-white shadow-[0_12px_30px_-10px_rgb(0_0_0/.5)] transition-colors hover:bg-signal hover:text-ink sm:bottom-[104px] sm:right-8"
         >
           <svg viewBox="0 0 56 56" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden>
             <circle cx="28" cy="28" r="26" fill="none" stroke="rgb(255 255 255 / .15)" strokeWidth="2" />

@@ -130,7 +130,7 @@ export const PROCESS: { title: string; text: string; image: MediaKey }[] = [
   { title: "Survey", text: "We count, film and model the junction to see where the time is actually lost.", image: "streetAerial" },
   { title: "Design", text: "Signal layout, phasing and timing plans, signed off with the road authority.", image: "wiring" },
   { title: "Install", text: "Civil works, cabling and commissioning, scheduled around traffic.", image: "crews" },
-  { title: "Operate", text: "24/7 monitoring, regular re-timing and a fault line that answers.", image: "controlPoster" },
+  { title: "Maintain", text: "Monitoring, regular re-timing and maintenance that keep the junction performing.", image: "controlPoster" },
 ];
 
 /* PLACEHOLDER projects — replace with the client's real references before launch. */

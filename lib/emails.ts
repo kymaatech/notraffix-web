@@ -13,8 +13,6 @@ export type EnquiryEmailData = {
   orgType: string;
   services: string[]; // display names
   location: string;
-  scale?: string;
-  timeline?: string;
   kit?: string; // display name of a chosen solar system
   message: string;
   receivedAt?: Date;
@@ -60,7 +58,7 @@ function shell({ preheader, body, footerNote }: { preheader: string; body: strin
     <tr><td style="background:${C.card};border-radius:20px;overflow:hidden">${body}</td></tr>
     <tr><td class="px" style="padding:24px 16px 0;font:400 13px/20px ${FONT};color:${C.muted}">
       ${footerNote}<br>
-      ${esc(SITE.legal)} · ${esc(SITE.city)} · <a href="${SITE.url}" style="color:${C.muted}">${SITE.url.replace(/^https?:\/\//, "")}</a>
+      ${esc(SITE.name)}, an initiative of ${esc(SITE.parent)} · ${esc(SITE.city)} · <a href="${SITE.url}" style="color:${C.muted}">${SITE.url.replace(/^https?:\/\//, "")}</a>
     </td></tr>
   </table>
 </td></tr>
@@ -119,8 +117,6 @@ export function teamEnquiryEmail(d: EnquiryEmailData) {
               ["Needs", esc(d.services.join(", "))],
               ...(d.kit ? ([["System", esc(d.kit)]] as [string, string][]) : []),
               ["Site", esc(d.location)],
-              ["Size of job", esc(d.scale || "—")],
-              ["Timeline", esc(d.timeline || "—")],
             ])}
           </table>
         </td></tr>
@@ -141,8 +137,6 @@ export function teamEnquiryEmail(d: EnquiryEmailData) {
     `Email:      ${d.email}`,
     `Phone:      ${d.phone || "—"}`,
     `Org type:   ${d.orgType}`,
-    `Size:       ${d.scale || "—"}`,
-    `Timeline:   ${d.timeline || "—"}`,
     ...(d.kit ? [`System:     ${d.kit}`] : []),
     "",
     "Message:",
@@ -159,13 +153,13 @@ export function customerConfirmationEmail(d: EnquiryEmailData) {
   const first = d.name.split(" ")[0];
   const subject = `We've received your enquiry${d.reference ? ` (${d.reference})` : ""}`;
   const steps = [
-    ["We read it", "A traffic engineer reviews your enquiry and replies within two working days."],
+    ["We read it", "Our customer service team reviews your enquiry and replies within two working days."],
     ["We visit", "We agree a site visit and count the traffic at the times that matter."],
     ["You get a proposal", "A written plan with layout, phasing, cost and timeline."],
   ];
 
   const html = shell({
-    preheader: `Thanks, ${first}. A traffic engineer will reply within two working days.`,
+    preheader: `Thanks, ${first}. Our team will reply within two working days.`,
     footerNote: `You're receiving this because you sent an enquiry on our website. Reply to this email if anything has changed.`,
     body: `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -174,7 +168,7 @@ export function customerConfirmationEmail(d: EnquiryEmailData) {
           ${d.reference ? `<p style="margin:0 0 16px"><span style="display:inline-block;background:${C.paper};border-radius:999px;padding:7px 14px;font:500 13px/1 ${FONT};color:${C.ink}">Reference ${esc(d.reference)}</span></p>` : ""}
           <h1 class="h1" style="margin:0;font:400 32px/38px ${FONT};letter-spacing:-1px;color:${C.ink}">Thanks, ${esc(first)}. <span style="color:${C.muted}">We've got your enquiry.</span></h1>
           <p style="margin:16px 0 0;font:400 16px/25px ${FONT};color:${C.body}">
-            You asked about <strong style="font-weight:500;color:${C.ink}">${esc(d.services.join(", ").toLowerCase())}</strong> in <strong style="font-weight:500;color:${C.ink}">${esc(d.location)}</strong>. A traffic engineer will reply to ${esc(d.email)} within two working days.
+            You asked about <strong style="font-weight:500;color:${C.ink}">${esc(d.services.join(", ").toLowerCase())}</strong> in <strong style="font-weight:500;color:${C.ink}">${esc(d.location)}</strong>. Our customer service team will reply to ${esc(d.email)} within two working days.
           </p>
         </td></tr>
         <tr><td class="px" style="padding:28px 40px 8px">
@@ -197,8 +191,9 @@ export function customerConfirmationEmail(d: EnquiryEmailData) {
         <tr><td class="px" style="padding:20px 40px 8px">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${C.ink};border-radius:14px">
             <tr><td style="padding:20px 22px">
-              <p style="margin:0;font:400 14px/20px ${FONT};color:#A9ADB3">Signal fault or emergency? Our fault line is open 24/7.</p>
-              <p style="margin:6px 0 0;font:400 22px/28px ${FONT};letter-spacing:-0.5px"><a href="${tel(SITE.faultLine)}" style="color:${C.signal};text-decoration:none">${esc(SITE.faultLine)}</a></p>
+              <p style="margin:0;font:400 14px/20px ${FONT};color:#A9ADB3">Prefer to talk? Call or WhatsApp us, ${esc(SITE.hours)}.</p>
+              <p style="margin:6px 0 0;font:400 22px/28px ${FONT};letter-spacing:-0.5px"><a href="${tel(SITE.phone)}" style="color:${C.signal};text-decoration:none">${esc(SITE.phone)}</a></p>
+              <p style="margin:10px 0 0;font:400 14px/20px ${FONT}"><a href="https://wa.me/${SITE.whatsapp}" style="color:#FFFFFF">Chat on WhatsApp</a></p>
             </td></tr>
           </table>
         </td></tr>
@@ -213,12 +208,12 @@ export function customerConfirmationEmail(d: EnquiryEmailData) {
   const text = [
     `Thanks, ${first}. We've got your enquiry.${d.reference ? ` Reference ${d.reference}.` : ""}`,
     "",
-    `You asked about ${d.services.join(", ").toLowerCase()} in ${d.location}. A traffic engineer will reply to ${d.email} within two working days.`,
+    `You asked about ${d.services.join(", ").toLowerCase()} in ${d.location}. Our customer service team will reply to ${d.email} within two working days.`,
     "",
     "What happens next",
     ...steps.map(([t, s], i) => `${i + 1}. ${t}: ${s}`),
     "",
-    `Signal fault or emergency? Call our 24/7 fault line: ${SITE.faultLine}`,
+    `Prefer to talk? Call or WhatsApp us on ${SITE.phone} (${SITE.hours}).`,
     "",
     `The ${SITE.name} team`,
     SITE.url,
@@ -233,13 +228,11 @@ export const SAMPLE: EnquiryEmailData = {
   name: "Adaeze Okafor",
   email: "adaeze.okafor@example.com",
   phone: "+234 803 000 0000",
-  organisation: "Lekki Gardens Estate",
+  organisation: "Rumuola Gardens Estate",
   orgType: "Estate, campus or developer",
   services: ["Signal installation", "Monitoring and data"],
-  location: "Lekki–Epe Expressway, Lagos",
-  scale: "2 to 10 junctions",
-  timeline: "Within 3 months",
+  location: "Ikwerre Road, Port Harcourt",
   message:
-    "We have two access junctions onto the expressway that back up badly every morning between 7 and 9am.\n\nWe'd like to understand what signalising them would involve, and whether we can monitor them remotely.",
+    "We have two access junctions onto Ikwerre Road that back up badly every morning between 7 and 9am.\n\nWe'd like to understand what signalising them would involve, and whether we can monitor them remotely.",
   receivedAt: new Date("2026-11-05T09:42:00+01:00"),
 };
