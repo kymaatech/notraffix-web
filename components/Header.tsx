@@ -14,6 +14,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
+  const dark = path === "/";
 
   useEffect(() => {
     let last = window.scrollY;
@@ -41,11 +42,15 @@ export function Header() {
     >
       <div
         className={`mx-auto flex h-[60px] max-w-site items-center justify-between rounded-full pl-5 pr-2 transition-all duration-300 ${
-          scrolled || open ? "bg-white/95 shadow-[0_8px_30px_-12px_rgb(0_0_0/.25)] backdrop-blur-md" : "bg-white/90 backdrop-blur-md"
+          dark && !open
+            ? `border border-white/10 backdrop-blur-xl ${scrolled ? "bg-night-2/90 shadow-[0_10px_40px_-12px_rgb(0_0_0/.8)]" : "bg-night-2/60"}`
+            : scrolled || open
+              ? "bg-white/95 shadow-[0_8px_30px_-12px_rgb(0_0_0/.25)] backdrop-blur-md"
+              : "bg-white/90 backdrop-blur-md"
         }`}
       >
         <Link href="/" aria-label={`${SITE.name} home`}>
-          <Logo />
+          <Logo light={dark && !open} />
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
@@ -56,7 +61,9 @@ export function Header() {
                 key={n.href}
                 href={n.href}
                 aria-current={active ? "page" : undefined}
-                className={`rounded-full px-4 py-2 text-[15px] transition-colors ${active ? "bg-stone text-ink" : "text-body hover:text-ink"}`}
+                className={`rounded-full px-4 py-2 text-[15px] transition-colors ${
+                  dark ? (active ? "bg-white/10 text-white" : "text-white/70 hover:text-white") : active ? "bg-stone text-ink" : "text-body hover:text-ink"
+                }`}
               >
                 {n.label}
               </Link>
@@ -65,17 +72,17 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href="/enquiry" className="btn-ink hidden !min-h-[44px] !px-5 sm:inline-flex">
+          <Link href="/enquiry" className={`${dark ? "btn-signal" : "btn-ink"} hidden !min-h-[44px] !px-5 sm:inline-flex`}>
             Make an enquiry <Arrow />
           </Link>
           <button
             onClick={() => setOpen((o) => !o)}
-            className="relative flex h-11 w-11 items-center justify-center rounded-full bg-stone md:hidden"
+            className={`relative flex h-11 w-11 items-center justify-center rounded-full md:hidden ${dark && !open ? "bg-white/10" : "bg-stone"}`}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
           >
-            <span className={`absolute h-[1.5px] w-4 bg-ink transition ${open ? "rotate-45" : "-translate-y-[3px]"}`} />
-            <span className={`absolute h-[1.5px] w-4 bg-ink transition ${open ? "-rotate-45" : "translate-y-[3px]"}`} />
+            <span className={`absolute h-[1.5px] w-4 transition ${dark && !open ? "bg-white" : "bg-ink"} ${open ? "rotate-45" : "-translate-y-[3px]"}`} />
+            <span className={`absolute h-[1.5px] w-4 transition ${dark && !open ? "bg-white" : "bg-ink"} ${open ? "-rotate-45" : "translate-y-[3px]"}`} />
           </button>
         </div>
       </div>

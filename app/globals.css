@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
+  html { scroll-padding-top: 96px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
   body { @apply bg-paper text-ink font-sans; font-feature-settings: "ss01", "cv11"; }
   ::selection { background: #F5A300; color: #15171B; }
   :focus-visible { outline: 2px solid #F5A300; outline-offset: 3px; border-radius: 6px; }

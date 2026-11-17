@@ -16,6 +16,7 @@ export function EnquiryForm() {
     ...EMPTY,
     services: pre && SERVICE_OPTIONS.some((s) => s.slug === pre) ? [pre] : [],
     kit: preKit && KIT_OPTIONS.some((k) => k.slug === preKit) ? preKit : "",
+    location: (params.get("location") || "").slice(0, 200),
   });
   const [touched, setTouched] = useState<Partial<Record<keyof Enquiry, boolean>>>({});
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -84,7 +85,7 @@ export function EnquiryForm() {
   const err = (k: keyof Enquiry) => (touched[k] ? errors[k] : undefined);
 
   return (
-    <form ref={formRef} onSubmit={submit} noValidate className="space-y-12">
+    <form id="form" ref={formRef} onSubmit={submit} noValidate className="space-y-12">
       <fieldset className="space-y-5">
         <legend className="mb-2 text-[22px] tracking-[-0.03em]">About you</legend>
         <div className="grid gap-5 sm:grid-cols-2">
