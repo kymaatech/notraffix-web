@@ -47,7 +47,6 @@ export async function POST(req: Request) {
     location: str("location", 200),
     kit: KIT_OPTIONS.some((k) => k.slug === raw.kit) ? String(raw.kit) : undefined,
     message: str("message", 5000),
-    consent: raw.consent === true,
   };
 
   const errors = validate(e);

@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { KIT_OPTIONS, ORG_TYPES, SERVICE_OPTIONS, validate, type Enquiry, type FieldErrors } from "@/lib/enquiry";
 import { Arrow } from "./ui";
 
-const EMPTY: Enquiry = { name: "", email: "", phone: "", organisation: "", orgType: "", services: [], location: "", kit: "", message: "", consent: false };
+const EMPTY: Enquiry = { name: "", email: "", phone: "", organisation: "", orgType: "", services: [], location: "", kit: "", message: "" };
 
 export function EnquiryForm() {
   const params = useSearchParams();
@@ -152,20 +152,6 @@ export function EnquiryForm() {
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
 
       <div className="space-y-6 border-t border-line pt-8">
-        <label className="flex cursor-pointer items-start gap-3">
-          <input
-            data-field="consent"
-            type="checkbox"
-            checked={v.consent}
-            onChange={(e) => { set("consent", e.target.checked); setTouched((t) => ({ ...t, consent: true })); }}
-            className="mt-1 h-5 w-5 shrink-0 accent-ink"
-            aria-invalid={!!err("consent")}
-          />
-          <span className="text-[15px] leading-relaxed text-body">
-            I agree to {`Notraffix`} storing these details to reply to my enquiry. See the <Link href="/legal/privacy" className="link-u text-ink">privacy policy</Link>.
-            {err("consent") && <span role="alert" className="mt-1 block text-[14px] text-stop">{err("consent")}</span>}
-          </span>
-        </label>
         {status === "error" && (
           <p role="alert" className="rounded-lg bg-stop/10 px-4 py-3 text-[15px] text-stop">{serverError}</p>
         )}

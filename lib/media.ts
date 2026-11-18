@@ -35,7 +35,7 @@ export const MEDIA = {
   solarInstaller: { file: "solar-installer.jpg", src: px(30285845), alt: "Technician in a hi-vis vest installing a solar panel" },
   solarPanels: { file: "solar-panels-sky.jpg", src: px(27873610), alt: "Solar panels angled towards the sky" },
   solarCells: { file: "solar-cells.jpg", src: px(8853509), alt: "Close-up of solar cells" },
-  intersection: { file: "intersection-aerial.jpg", src: "https://images.pexels.com/videos/32521835/pexels-photo-32521835.jpeg?auto=compress&w=1920", alt: "Top-down view of a signalised intersection" },
+  intersection: { file: "junction-night-aerial.jpg", src: px(8913522), alt: "Aerial view of a signalised junction at night, its lanes lit amber" },
 } satisfies Record<string, MediaItem>;
 
 export type MediaKey = keyof typeof MEDIA;

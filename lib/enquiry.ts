@@ -30,7 +30,6 @@ export type Enquiry = {
   location: string;
   kit?: string;
   message: string;
-  consent: boolean;
 };
 
 export type FieldErrors = Partial<Record<keyof Enquiry, string>>;
@@ -46,6 +45,5 @@ export function validate(e: Partial<Enquiry>): FieldErrors {
   if (!e.services || e.services.length === 0) err.services = "Choose at least one thing you need help with.";
   if (!e.location || e.location.trim().length < 2) err.location = "Tell us the city, road or junction.";
   if (!e.message || e.message.trim().length < 10) err.message = "Add a sentence or two about the site and the problem.";
-  if (!e.consent) err.consent = "Tick this so we can reply to you.";
   return err;
 }
