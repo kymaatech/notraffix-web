@@ -10,3 +10,4 @@ node_modules
 public/media/*
 # committed: compressed hero loop (14 s, 720p, no audio)
 !public/media/hero-roundabout-lite.mp4
+!public/media/client-*.jpg
