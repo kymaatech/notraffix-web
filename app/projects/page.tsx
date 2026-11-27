@@ -3,6 +3,7 @@ import { PROJECTS } from "@/lib/content";
 import { PageHero } from "@/components/PageHero";
 import { Closing } from "@/components/Closing";
 import { Photo } from "@/components/ui";
+import { Reveal } from "@/components/motion";
 
 export const metadata: Metadata = { title: "Projects", description: "Signal installation, adaptive control and roadworks signalling projects." };
 
@@ -15,7 +16,7 @@ export default function ProjectsPage() {
           {PROJECTS.map((p, i) => (
             <article key={p.name} className="grid items-center gap-10 lg:grid-cols-12">
               <Photo k={p.image} className={`aspect-[16/10] rounded-xl lg:col-span-7 ${i % 2 ? "lg:order-2" : ""}`} sizes="(min-width:1080px) 58vw, 100vw" />
-              <div className="lg:col-span-5">
+              <Reveal className="lg:col-span-5">
                 <p className="label">{p.scope}</p>
                 <h2 className="mt-3 text-title">{p.name}</h2>
                 <p className="mt-5 text-[17px] leading-relaxed text-body">{p.summary}</p>
@@ -27,7 +28,7 @@ export default function ProjectsPage() {
                     </div>
                   ))}
                 </dl>
-              </div>
+              </Reveal>
             </article>
           ))}
         </div>

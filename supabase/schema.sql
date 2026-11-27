@@ -16,8 +16,7 @@ create table if not exists public.enquiries (
   org_type     text not null,
   services     text[] not null default '{}',
   location     text not null,
-  scale        text,
-  timeline     text,
+  kit          text,
   message      text not null,
   source_ip    text,
   user_agent   text
@@ -30,3 +29,7 @@ create index if not exists enquiries_status_idx on public.enquiries (status);
 alter table public.enquiries enable row level security;
 -- No policies are created on purpose: anon and authenticated users get no access.
 -- Add a select policy later if you build an admin dashboard for signed-in staff.
+
+-- If you already created the table from an earlier version of this file:
+-- alter table public.enquiries add column if not exists kit text;
+-- (the old scale/timeline columns can stay; the site no longer fills them)

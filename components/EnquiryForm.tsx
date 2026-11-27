@@ -3,16 +3,21 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
-import { SOLUTIONS } from "@/lib/content";
-import { ORG_TYPES, SCALES, TIMELINES, validate, type Enquiry, type FieldErrors } from "@/lib/enquiry";
+import { KIT_OPTIONS, ORG_TYPES, SERVICE_OPTIONS, validate, type Enquiry, type FieldErrors } from "@/lib/enquiry";
 import { Arrow } from "./ui";
 
-const EMPTY: Enquiry = { name: "", email: "", phone: "", organisation: "", orgType: "", services: [], location: "", scale: "", timeline: "", message: "", consent: false };
+const EMPTY: Enquiry = { name: "", email: "", phone: "", organisation: "", orgType: "", services: [], location: "", kit: "", message: "" };
 
 export function EnquiryForm() {
   const params = useSearchParams();
   const pre = params.get("service");
-  const [v, setV] = useState<Enquiry>({ ...EMPTY, services: pre && SOLUTIONS.some((s) => s.slug === pre) ? [pre] : [] });
+  const preKit = params.get("kit");
+  const [v, setV] = useState<Enquiry>({
+    ...EMPTY,
+    services: pre && SERVICE_OPTIONS.some((s) => s.slug === pre) ? [pre] : [],
+    kit: preKit && KIT_OPTIONS.some((k) => k.slug === preKit) ? preKit : "",
+    location: (params.get("location") || "").slice(0, 200),
+  });
   const [touched, setTouched] = useState<Partial<Record<keyof Enquiry, boolean>>>({});
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -67,7 +72,7 @@ export function EnquiryForm() {
         </span>
         <h2 className="mt-8 text-title">Enquiry sent.</h2>
         <p className="mt-4 max-w-[460px] text-[17px] leading-relaxed text-body">
-          Thanks, {v.name.split(" ")[0]}. A traffic engineer will reply to {v.email} within two working days{reference ? `. Your reference is ${reference}` : ""}.
+          Thanks, {v.name.split(" ")[0]}. Our customer service team will reply to {v.email} within two working days{reference ? `. Your reference is ${reference}` : ""}.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/solutions" className="btn-ink">Browse solutions</Link>
@@ -80,7 +85,7 @@ export function EnquiryForm() {
   const err = (k: keyof Enquiry) => (touched[k] ? errors[k] : undefined);
 
   return (
-    <form ref={formRef} onSubmit={submit} noValidate className="space-y-12">
+    <form id="form" ref={formRef} onSubmit={submit} noValidate className="space-y-12">
       <fieldset className="space-y-5">
         <legend className="mb-2 text-[22px] tracking-[-0.03em]">About you</legend>
         <div className="grid gap-5 sm:grid-cols-2">
@@ -97,7 +102,7 @@ export function EnquiryForm() {
         <div>
           <p id="services-label" className="mb-3 text-[15px] font-medium">What do you need help with? <span className="text-stop">*</span></p>
           <div role="group" aria-labelledby="services-label" aria-describedby={err("services") ? "services-err" : undefined} className="flex flex-wrap gap-2">
-            {SOLUTIONS.map((s, i) => {
+            {SERVICE_OPTIONS.map((s, i) => {
               const on = v.services.includes(s.slug);
               return (
                 <button
@@ -115,11 +120,17 @@ export function EnquiryForm() {
           </div>
           {err("services") && <p id="services-err" role="alert" className="mt-2 text-[14px] text-stop">{err("services")}</p>}
         </div>
+        {v.services.includes("solar-systems") && (
+          <label htmlFor="f-kit" className="block">
+            <span className="mb-2 block text-[15px] font-medium">Which solar system?</span>
+            <select id="f-kit" value={v.kit} onChange={(e) => set("kit", e.target.value)} className="field">
+              <option value="">Not sure yet, please advise</option>
+              {KIT_OPTIONS.map((k) => <option key={k.slug} value={k.slug}>{k.title}</option>)}
+            </select>
+            <p className="mt-2 text-[14px] text-muted"><Link href="/solar#systems" className="link-u text-ink">Compare the six systems</Link></p>
+          </label>
+        )}
         <Text k="location" label="Where is the site?" required placeholder="City, road or junction" v={v} set={set} blur={blur} err={err("location")} />
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Select k="scale" label="Size of the job" options={SCALES} v={v} set={set} blur={blur} />
-          <Select k="timeline" label="When do you need it?" options={TIMELINES} v={v} set={set} blur={blur} />
-        </div>
         <label className="block">
           <span className="mb-2 block text-[15px] font-medium">Tell us about it <span className="text-stop">*</span></span>
           <textarea
@@ -141,20 +152,6 @@ export function EnquiryForm() {
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
 
       <div className="space-y-6 border-t border-line pt-8">
-        <label className="flex cursor-pointer items-start gap-3">
-          <input
-            data-field="consent"
-            type="checkbox"
-            checked={v.consent}
-            onChange={(e) => { set("consent", e.target.checked); setTouched((t) => ({ ...t, consent: true })); }}
-            className="mt-1 h-5 w-5 shrink-0 accent-ink"
-            aria-invalid={!!err("consent")}
-          />
-          <span className="text-[15px] leading-relaxed text-body">
-            I agree to {`Notraffix`} storing these details to reply to my enquiry. See the <Link href="/legal/privacy" className="link-u text-ink">privacy policy</Link>.
-            {err("consent") && <span role="alert" className="mt-1 block text-[14px] text-stop">{err("consent")}</span>}
-          </span>
-        </label>
         {status === "error" && (
           <p role="alert" className="rounded-lg bg-stop/10 px-4 py-3 text-[15px] text-stop">{serverError}</p>
         )}
@@ -191,7 +188,7 @@ function Text({ k, type = "text", placeholder, autoComplete, ...c }: Common & { 
   );
 }
 
-function Select({ k, options, ...c }: Common & { k: "orgType" | "scale" | "timeline"; options: readonly string[] }) {
+function Select({ k, options, ...c }: Common & { k: "orgType"; options: readonly string[] }) {
   const id = `f-${k}`;
   return (
     <label htmlFor={id} className="block">

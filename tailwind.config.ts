@@ -20,6 +20,10 @@ export default {
         "signal-deep": "#D98E00",
         go: "#2FB36B",
         stop: "#E5483B",
+        night: "#151513",
+        "night-2": "#1E1D1A",
+        "night-3": "#272622",
+        gold: "#E8B55A",
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui", "sans-serif"],

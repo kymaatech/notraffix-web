@@ -1,271 +1,288 @@
 import Link from "next/link";
-import { Arrow, ArrowLink, Film, Photo, SectionTop, Tone } from "@/components/ui";
+import { Arrow, ArrowLink, Photo } from "@/components/ui";
 import { Faq } from "@/components/Faq";
-import { FAQ, PROCESS, PROJECTS, SOLUTIONS } from "@/lib/content";
+import { Item, Parallax, Reveal, Stagger } from "@/components/motion";
+import { FAQ, SOLUTIONS } from "@/lib/content";
 import { Closing } from "@/components/Closing";
+import { SolarPoleScene } from "@/components/solar/Art";
+import { KITS } from "@/lib/solar";
+import { TEAM } from "@/lib/team";
+import type { MediaKey } from "@/lib/media";
 
+/* Home, after Sila Signalbau's traffic-lights page: a bright product photo,
+   the title on white, then full-bleed photos with overlapping white cards.
+   Modernised with larger type, rounded frames and quiet motion. */
 export default function Home() {
   return (
     <>
       <Hero />
       <Intro />
-      <Solutions />
-      <ControlRoom />
-      <Spotlight />
-      <Process />
-      <Projects />
+      <Services />
+      <Values />
+      <SolarBand />
+      <MoreSolutions />
+      <Leadership />
       <Questions />
       <Closing />
     </>
   );
 }
 
-/* ── 1. Hero: full-screen aerial film, the pitch and the action on one screen ── */
-function Hero() {
-  const quick = [SOLUTIONS[0], SOLUTIONS[1], SOLUTIONS[4]];
+const eyebrow = "text-[13px] font-medium uppercase tracking-[0.16em] text-muted";
+
+function Lights({ className = "" }: { className?: string }) {
   return (
-    <section className="on-dark relative isolate flex min-h-[640px] flex-col overflow-hidden bg-ink text-white h-[100svh]">
-      <Film video="heroVideo" poster="heroPoster" className="!absolute inset-0 -z-10 !bg-ink" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/55 to-ink/10" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-ink/50 to-transparent" />
+    <span className={`inline-flex items-center gap-1.5 ${className}`} aria-hidden>
+      <span className="h-2 w-2 rounded-full bg-stop" />
+      <span className="h-2 w-2 rounded-full bg-signal" />
+      <span className="h-2 w-2 rounded-full bg-go" />
+    </span>
+  );
+}
 
-      <div className="wrap flex flex-1 flex-col justify-end pb-8 pt-28 sm:pb-10">
-        <p className="hero-in text-[15px] text-white/75 [animation-delay:.05s]">Traffic signal systems for Nigerian cities</p>
-        <h1 className="mt-5 text-hero">
-          <span className="hero-in block [animation-delay:.12s]">Junctions that keep</span>
-          <span className="hero-in block text-white/55 [animation-delay:.2s]">the city moving.</span>
-        </h1>
-        <div className="mt-9 grid items-end gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <p className="hero-in max-w-[560px] text-lead text-white/75 [animation-delay:.3s]">
-              We design, install and run traffic signals, adaptive control and roadworks signalling for road authorities, contractors and campuses.
-            </p>
-            <div className="hero-in mt-8 flex flex-wrap gap-3 [animation-delay:.38s]">
-              <Link href="/enquiry" className="btn-signal">Request a site survey <Arrow /></Link>
-              <Link href="/solutions" className="btn-glass">See our solutions</Link>
-            </div>
-          </div>
-
-          <nav aria-label="Popular solutions" className="hero-in hidden rounded-xl border border-white/15 bg-white/[0.08] p-2 backdrop-blur-md lg:col-span-5 lg:block [animation-delay:.45s]">
-            {quick.map((s) => (
-              <Link key={s.slug} href={`/solutions/${s.slug}`} className="group flex items-center gap-4 rounded-lg p-2 transition-colors hover:bg-white/10">
-                <Photo k={s.image} className="h-14 w-[72px] shrink-0 rounded-md" />
-                <span className="flex-1">
-                  <span className="block text-[16px] text-white">{s.title}</span>
-                  <span className="mt-0.5 block text-[13.5px] leading-snug text-white/60">{s.short.split(":")[0].split(",")[0]}</span>
-                </span>
-                <Arrow className="h-4 w-4 shrink-0 text-white/60 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            ))}
-          </nav>
+/* ── 1. Hero: the product against the sky, the statement on a white panel ── */
+function Hero() {
+  return (
+    <section className="px-3 pt-[84px] sm:px-5 sm:pt-[92px]">
+      <div className="relative mx-auto max-w-[calc(1360px+2.5rem)]">
+        <div className="relative isolate h-[44svh] min-h-[300px] overflow-hidden rounded-2xl sm:h-[56svh] sm:min-h-[420px] sm:rounded-[28px]">
+          <Parallax>
+            <Photo k="signalSky" priority className="h-full w-full [&_img]:object-[50%_35%]" sizes="100vw" />
+          </Parallax>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
         </div>
 
-        <dl className="hero-in mt-8 hidden grid-cols-1 gap-4 sm:grid border-t border-white/15 pt-6 text-[15px] sm:grid-cols-3 [animation-delay:.5s]">
-          {[
-            ["Survey to maintenance", "One team from the first count to years of operation"],
-            ["Built for the grid we have", "Battery and solar backup on every controller"],
-            ["24/7 fault line", "Engineers dispatched the moment a junction reports a fault"],
-          ].map(([k, v]) => (
-            <div key={k} className="flex flex-col">
-              <dt className="text-white">{k}</dt>
-              <dd className="text-white/55">{v}</dd>
+        <div className="wrap relative z-10 -mt-20 sm:-mt-28">
+          <div className="hero-in max-w-[920px] rounded-2xl bg-white p-7 shadow-[0_30px_80px_-40px_rgb(21_23_27/.35)] sm:rounded-[28px] sm:p-12 [animation-delay:.1s]">
+            <p className={`flex items-center gap-3 ${eyebrow}`}>
+              <Lights /> Traffic signal systems for African cities
+            </p>
+            <h1 className="mt-5 text-[clamp(2rem,4.2vw,3.9rem)] font-normal leading-[1.06] tracking-[-0.04em]">
+              We design, install and run traffic signals, adaptive control and road works signalling.
+            </h1>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/enquiry" className="btn-signal">Make an enquiry <Arrow /></Link>
+              <Link href="/solutions" className="btn-line">Our solutions</Link>
             </div>
-          ))}
-        </dl>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-/* ── 2. Statement + people at work ── */
+/* ── 2. Intro, as Sila's "New standards in traffic safety" ── */
 function Intro() {
   return (
-    <section className="py-24 sm:py-32">
-      <div className="wrap">
-        <SectionTop label="Why Notraffix">
-          <Tone
-            className="text-display max-w-[1000px]"
-            a="Most congestion isn't a road problem."
-            b="It's a timing problem. We fix it junction by junction, with signals that respond to the traffic actually there."
-          />
-        </SectionTop>
-
-        <div className="mt-16 grid gap-5 lg:grid-cols-12">
-          <Photo k="engineer" className="aspect-[4/5] rounded-xl lg:col-span-5" sizes="(min-width:1080px) 40vw, 100vw" />
-          <div className="flex flex-col gap-5 lg:col-span-7">
-            <Photo k="signalSky" className="aspect-[16/10] rounded-xl" sizes="(min-width:1080px) 55vw, 100vw" />
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div className="rounded-xl bg-white p-7">
-                <h3 className="text-[22px] tracking-[-0.03em]">Hardware that suits the climate</h3>
-                <p className="mt-3 text-[16px] leading-relaxed text-body">Controllers, heads and cabinets specified for heat, dust and heavy rain, with backup power on every junction.</p>
-              </div>
-              <div className="rounded-xl bg-white p-7">
-                <h3 className="text-[22px] tracking-[-0.03em]">Engineers who stay on</h3>
-                <p className="mt-3 text-[16px] leading-relaxed text-body">The team that surveys and installs your junctions also monitors and maintains them afterwards.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── 3. Solutions: photo cards ── */
-function Solutions() {
-  return (
-    <section className="bg-white py-24 sm:py-32">
-      <div className="wrap">
-        <SectionTop label="Solutions" action={<ArrowLink href="/solutions">All solutions</ArrowLink>}>
-          <Tone className="text-display max-w-[900px]" a="Everything a junction needs," b="from the pole to the control room." />
-        </SectionTop>
-        <div className="mt-16 grid gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {SOLUTIONS.map((s) => (
-            <Link key={s.slug} href={`/solutions/${s.slug}`} className="group block">
-              <Photo k={s.image} className="aspect-[4/3] rounded-xl" sizes="(min-width:1080px) 30vw, (min-width:640px) 45vw, 100vw" />
-              <div className="mt-5 flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="text-[24px] tracking-[-0.035em]">{s.title}</h3>
-                  <p className="mt-2 max-w-[380px] text-[16px] leading-relaxed text-body">{s.short}</p>
-                </div>
-                <span className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line transition-colors group-hover:border-ink group-hover:bg-ink group-hover:text-white">
-                  <Arrow diagonal />
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── 4. Full-bleed control-room film ── */
-function ControlRoom() {
-  return (
-    <section className="on-dark relative isolate overflow-hidden bg-ink text-white">
-      <Film video="controlVideo" poster="controlPoster" className="!absolute inset-0 -z-10" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/90 via-ink/60 to-ink/20" />
-      <div className="wrap flex min-h-[760px] flex-col justify-between py-24 sm:py-28">
-        <div className="max-w-[720px]">
-          <p className="label">Monitoring and control</p>
-          <Tone className="mt-5 text-display" a="One control room" b="for every junction you own." />
-          <p className="mt-7 max-w-[520px] text-lead text-white/70">
-            Phase state, queues and faults for the whole network on one screen. Engineers can re-time a corridor or push an incident plan in seconds, without a site visit.
+    <section className="pb-20 pt-20 sm:pb-28 sm:pt-28">
+      <div className="wrap grid gap-8 lg:grid-cols-12 lg:gap-10">
+        <Reveal className="lg:col-span-5">
+          <h2 className="text-title">
+            Built for <span className="text-muted">African cities.</span>
+          </h2>
+        </Reveal>
+        <Reveal className="space-y-5 text-[17.5px] leading-relaxed text-body lg:col-span-7" delay={0.08}>
+          <p>
+            Every junction is different. We start with a survey of the traffic actually there, then choose the signals, controller and timing that keep it safe and moving.
           </p>
-          <div className="mt-9"><Link href="/solutions/monitoring" className="btn-light">How monitoring works <Arrow /></Link></div>
-        </div>
-        <div className="mt-16 grid gap-px overflow-hidden rounded-xl bg-white/15 sm:grid-cols-3">
-          {[
-            ["Faults raised in seconds", "Lamp, controller and power faults alert our team day and night."],
-            ["Plans pushed remotely", "Timing plans are scheduled, changed and rolled back from the console."],
-            ["Data you can use", "Counts, delays and incidents in monthly reports and an open API."],
-          ].map(([t, d]) => (
-            <div key={t} className="bg-ink/70 p-6 backdrop-blur-md">
-              <h3 className="text-[19px] tracking-[-0.02em]">{t}</h3>
-              <p className="mt-2 text-[15px] leading-relaxed text-white/60">{d}</p>
-            </div>
-          ))}
-        </div>
+          <p>
+            Our hardware is chosen for heat, dust, heavy rain and an unreliable grid, with battery or solar backup on every controller. The same team designs, installs and maintains it, so one company stays accountable from the first count to years of operation.
+          </p>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-/* ── 5. Spotlight: adaptive control + roadworks, alternating splits ── */
-function Spotlight() {
-  const items = [SOLUTIONS[1], SOLUTIONS[4]];
+/* ── 3. Services: full-bleed photo to the screen edge, overlapping white card ── */
+function Services() {
+  const rows: { slug: string; name: string; image: MediaKey }[] = [
+    { slug: "signal-installation", name: "Traffic signals", image: "signalMast" },
+    { slug: "adaptive-control", name: "Adaptive control", image: "intersection" },
+    { slug: "roadworks", name: "Road works signalling", image: "cones" },
+  ];
   return (
-    <section className="py-24 sm:py-32">
-      <div className="wrap space-y-24 sm:space-y-32">
-        {items.map((s, i) => (
-          <div key={s.slug} className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
-            <div className={`grid grid-cols-5 gap-4 lg:col-span-7 ${i % 2 ? "lg:order-2" : ""}`}>
-              <Photo k={s.image} className="col-span-3 aspect-[3/4] rounded-xl" sizes="(min-width:1080px) 35vw, 60vw" />
-              <div className="col-span-2 flex flex-col gap-4">
-                <Photo k={s.gallery[0]} className="aspect-square rounded-xl" sizes="25vw" />
-                <Photo k={s.gallery[1]} className="flex-1 rounded-xl" sizes="25vw" />
-              </div>
+    <section className="space-y-16 pb-24 sm:space-y-24 sm:pb-32">
+      {rows.map((r, i) => {
+        const s = SOLUTIONS.find((x) => x.slug === r.slug)!;
+        const flip = i % 2 === 1;
+        return (
+          <div key={r.slug} className="relative lg:flex lg:min-h-[600px] lg:items-center">
+            {/* photo: runs off the left (or right) edge of the screen */}
+            <div className={`lg:absolute lg:inset-y-0 lg:w-[60%] ${flip ? "lg:right-0" : "lg:left-0"}`}>
+              <Photo
+                k={r.image}
+                className={`aspect-[4/3] sm:aspect-[16/9] lg:aspect-auto lg:h-full ${flip ? "lg:rounded-l-[28px]" : "lg:rounded-r-[28px]"}`}
+                sizes="(min-width:1080px) 60vw, 100vw"
+              />
             </div>
-            <div className="lg:col-span-5">
-              <p className="label">{s.title}</p>
-              <Tone className="mt-4 text-title" a={s.heading[0]} b={s.heading[1]} />
-              <p className="mt-6 text-[17px] leading-relaxed text-body">{s.intro}</p>
-              <dl className="mt-8 border-t border-line">
-                {s.specs.slice(0, 4).map(([k, v]) => (
-                  <div key={k} className="flex justify-between gap-6 border-b border-line py-3.5 text-[15.5px]">
-                    <dt className="text-body">{k}</dt>
-                    <dd className="text-right text-ink">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-              <div className="mt-8"><ArrowLink href={`/solutions/${s.slug}`}>Read more about {s.title.toLowerCase()}</ArrowLink></div>
+            <div className="wrap relative z-10 -mt-14 lg:mt-0">
+              <Reveal delay={0.1} className={`lg:w-[46%] ${flip ? "" : "lg:ml-auto"}`}>
+                <div className="rounded-2xl bg-white p-7 shadow-[0_30px_80px_-35px_rgb(21_23_27/.3)] sm:rounded-[24px] sm:p-11">
+                  <p className={eyebrow}>{s.title}</p>
+                  <h3 className="mt-3 text-[clamp(1.9rem,2.8vw,2.6rem)] leading-[1.05] tracking-[-0.04em]">{r.name}</h3>
+                  <p className="mt-4 text-[16.5px] leading-relaxed text-body">{s.intro}</p>
+                  <ul className="mt-6 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
+                    {s.features.slice(0, 4).map((f) => (
+                      <li key={f.title} className="flex items-center gap-3 text-[15.5px]">
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal" aria-hidden />
+                        {f.title}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link href={`/solutions/${s.slug}`} className="btn-signal mt-8">More details <Arrow /></Link>
+                </div>
+              </Reveal>
             </div>
           </div>
-        ))}
+        );
+      })}
+    </section>
+  );
+}
+
+/* ── 4. Three promises in the three signal colours ── */
+function Values() {
+  const items = [
+    {
+      t: "Safer roads",
+      d: "Conflict monitoring, pedestrian phases and a safe fallback on every junction.",
+      c: "bg-stop",
+      icon: <path d="M12 3 5 6v5c0 4.4 3 8.3 7 9.5 4-1.2 7-5.1 7-9.5V6l-7-3Zm-3 9 2 2 4-4" />,
+    },
+    {
+      t: "Faster journeys",
+      d: "Timings that follow real demand, so green time goes where the queue is.",
+      c: "bg-signal",
+      icon: <path d="M12 21a8 8 0 1 0-8-8M12 13l4-4M4 13h2M12 5v2M18 13h2" />,
+    },
+    {
+      t: "Smarter cities",
+      d: "Every junction monitored and adjustable from one control room.",
+      c: "bg-go",
+      icon: <path d="M4 20V10l5-3v13M9 20V5l6-2v17M15 20V9l5 2v9M3 20h18" />,
+    },
+  ];
+  return (
+    <section className="bg-white py-24 sm:py-28">
+      <div className="wrap">
+        <Stagger className="grid gap-12 text-center sm:grid-cols-3 sm:gap-8">
+          {items.map((v) => (
+            <Item key={v.t} className="flex flex-col items-center">
+              <span className={`flex h-20 w-20 items-center justify-center rounded-full ${v.c} text-white shadow-[0_18px_40px_-18px_rgb(21_23_27/.45)]`}>
+                <svg viewBox="0 0 24 24" className="h-9 w-9" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  {v.icon}
+                </svg>
+              </span>
+              <h3 className="mt-6 text-[24px] tracking-[-0.03em]">{v.t}</h3>
+              <p className="mt-2 max-w-[300px] text-[16px] leading-relaxed text-body">{v.d}</p>
+            </Item>
+          ))}
+        </Stagger>
       </div>
     </section>
   );
 }
 
-/* ── 6. Process: a real sequence, so it's numbered ── */
-function Process() {
+/* ── 5. Solar systems ── */
+function SolarBand() {
+  return (
+    <section className="py-24 sm:py-32">
+      <div className="wrap grid items-center gap-12 lg:grid-cols-12">
+        <Reveal className="lg:col-span-6">
+          <SolarPoleScene className="block h-auto w-full max-w-[560px]" />
+        </Reveal>
+        <Reveal className="lg:col-span-6" delay={0.1}>
+          <p className={eyebrow}>Solar signal systems</p>
+          <h2 className="mt-4 text-title">
+            No power at the junction? <span className="text-muted">Bring the sun.</span>
+          </h2>
+          <p className="mt-6 max-w-[520px] text-[17px] leading-relaxed text-body">
+            Complete off-grid signal systems for three- and four-way junctions. Solar panels, batteries and a wireless controller on every pole, so the lights keep running whatever the grid is doing.
+          </p>
+          <ul className="mt-8 grid gap-2 sm:grid-cols-2">
+            {KITS.map((k) => (
+              <li key={k.slug}>
+                <Link href={`/solar#${k.slug}`} className="group flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3.5 text-[15px] transition-colors hover:bg-ink hover:text-white">
+                  <span>{k.name}</span>
+                  <span className="text-[13px] text-muted group-hover:text-white/60">{k.type}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-8"><Link href="/solar" className="btn-signal">Explore solar systems <Arrow /></Link></div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ── 6. The rest of the range ── */
+function MoreSolutions() {
+  const rest = SOLUTIONS.filter((s) => !["signal-installation", "adaptive-control", "roadworks"].includes(s.slug));
   return (
     <section className="bg-white py-24 sm:py-32">
       <div className="wrap">
-        <SectionTop label="How a project runs">
-          <Tone className="text-display max-w-[900px]" a="From the first count" b="to years of monitored operation." />
-        </SectionTop>
-        <ol className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {PROCESS.map((p, i) => (
-            <li key={p.title} className="flex flex-col">
-              <Photo k={p.image} className="aspect-[4/3] rounded-xl" sizes="(min-width:1080px) 23vw, 45vw" />
-              <div className="mt-5 flex items-baseline gap-3">
-                <span className="text-[15px] text-muted">Step {i + 1}</span>
-              </div>
-              <h3 className="mt-1 text-[26px] tracking-[-0.035em]">{p.title}</h3>
-              <p className="mt-2 text-[16px] leading-relaxed text-body">{p.text}</p>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-  );
-}
-
-/* ── 7. Projects ── */
-function Projects() {
-  const [a, ...rest] = PROJECTS;
-  return (
-    <section className="py-24 sm:py-32">
-      <div className="wrap">
-        <SectionTop label="Projects" action={<ArrowLink href="/projects">All projects</ArrowLink>}>
-          <Tone className="text-display max-w-[900px]" a="Work on" b="the roads you drive." />
-        </SectionTop>
-        <div className="mt-16 grid gap-5 lg:grid-cols-12">
-          <Link href="/projects" className="group relative block overflow-hidden rounded-xl lg:col-span-7">
-            <Photo k={a.image} className="aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[560px]" sizes="(min-width:1080px) 58vw, 100vw" />
-            <div className="on-dark absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 to-transparent p-7 pt-24 text-white">
-              <p className="label">{a.scope}, {a.place}</p>
-              <h3 className="mt-2 text-[30px] tracking-[-0.035em]">{a.name}</h3>
-              <p className="mt-2 max-w-[460px] text-[15.5px] text-white/70">{a.summary}</p>
-            </div>
-          </Link>
-          <div className="grid gap-5 lg:col-span-5">
-            {rest.map((p) => (
-              <Link key={p.name} href="/projects" className="group grid grid-cols-5 gap-5 rounded-xl bg-white p-3">
-                <Photo k={p.image} className="col-span-2 aspect-square rounded-lg" sizes="20vw" />
-                <div className="col-span-3 flex flex-col justify-between py-2 pr-2">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <Reveal>
+            <p className={eyebrow}>Also from Notraffix</p>
+            <h2 className="mt-4 text-title">
+              Priority, monitoring <span className="text-muted">and parking.</span>
+            </h2>
+          </Reveal>
+          <ArrowLink href="/solutions">All solutions</ArrowLink>
+        </div>
+        <Stagger className="mt-14 grid gap-5 md:grid-cols-3">
+          {rest.map((s) => (
+            <Item key={s.slug}>
+              <Link href={`/solutions/${s.slug}`} className="group block">
+                <Photo k={s.image} className="aspect-[4/3] rounded-2xl" sizes="(min-width:820px) 31vw, 100vw" />
+                <div className="mt-5 flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[14px] text-muted">{p.scope}</p>
-                    <h3 className="mt-1 text-[21px] leading-tight tracking-[-0.03em]">{p.name}</h3>
+                    <h3 className="text-[23px] tracking-[-0.035em]">{s.title}</h3>
+                    <p className="mt-2 text-[15.5px] leading-relaxed text-body">{s.short}</p>
                   </div>
-                  <p className="text-[14.5px] text-body">{p.place}, {p.scale}</p>
+                  <span className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line transition-colors group-hover:border-signal group-hover:bg-signal">
+                    <Arrow diagonal />
+                  </span>
                 </div>
               </Link>
-            ))}
-          </div>
+            </Item>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  );
+}
+
+/* ── 7. Leadership ── */
+function Leadership() {
+  return (
+    <section className="py-24 sm:py-32">
+      <div className="wrap">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <Reveal>
+            <p className={eyebrow}>Leadership</p>
+            <h2 className="mt-4 text-title">
+              Led by people who have <span className="text-muted">built and governed infrastructure.</span>
+            </h2>
+          </Reveal>
+          <ArrowLink href="/about#leadership">Meet the team</ArrowLink>
         </div>
+        <Stagger className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          {TEAM.map((p) => (
+            <Item key={p.slug}>
+              <Link href="/about#leadership" className="group block">
+                <div className="frame aspect-[4/5] rounded-2xl">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.photo} alt={`Portrait of ${p.name}`} loading="lazy" decoding="async" />
+                </div>
+                <p className="mt-4 text-[17px] leading-tight tracking-[-0.02em]">{p.name}</p>
+                <p className="mt-1 text-[13.5px] text-muted">{p.role}</p>
+              </Link>
+            </Item>
+          ))}
+        </Stagger>
       </div>
     </section>
   );
@@ -277,8 +294,10 @@ function Questions() {
     <section className="bg-white py-24 sm:py-32">
       <div className="wrap grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-4">
-          <p className="label">Questions</p>
-          <Tone className="mt-4 text-title" a="What clients" b="ask us first." />
+          <p className={eyebrow}>Questions</p>
+          <h2 className="mt-4 text-title">
+            What clients <span className="text-muted">ask us first.</span>
+          </h2>
           <p className="mt-6 max-w-[320px] text-[16px] text-body">
             Something else? <Link href="/enquiry" className="link-u text-ink">Send us an enquiry</Link>
           </p>

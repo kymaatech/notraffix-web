@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { validate, type Enquiry } from "@/lib/enquiry";
-import { SOLUTIONS } from "@/lib/content";
+import { KIT_OPTIONS, SERVICE_OPTIONS, validate, type Enquiry } from "@/lib/enquiry";
 import { SITE } from "@/lib/site";
+import { customerConfirmationEmail, teamEnquiryEmail } from "@/lib/emails";
 
 /* POST /api/enquiry
    1. validates (same rules as the form)
@@ -22,7 +22,6 @@ function limited(ip: string) {
   return recent.length > 5;
 }
 
-const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
 export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
@@ -37,7 +36,7 @@ export async function POST(req: Request) {
   if (raw.website) return NextResponse.json({ ok: true }); // honeypot
 
   const str = (k: string, max: number) => String(raw[k] ?? "").trim().slice(0, max);
-  const validSlugs = new Set(SOLUTIONS.map((s) => s.slug));
+  const validSlugs = new Set(SERVICE_OPTIONS.map((s) => s.slug));
   const e: Enquiry = {
     name: str("name", 120),
     email: str("email", 160).toLowerCase(),
@@ -46,16 +45,15 @@ export async function POST(req: Request) {
     orgType: str("orgType", 80),
     services: Array.isArray(raw.services) ? raw.services.map(String).filter((s) => validSlugs.has(s)).slice(0, 6) : [],
     location: str("location", 200),
-    scale: str("scale", 60),
-    timeline: str("timeline", 60),
+    kit: KIT_OPTIONS.some((k) => k.slug === raw.kit) ? String(raw.kit) : undefined,
     message: str("message", 5000),
-    consent: raw.consent === true,
   };
 
   const errors = validate(e);
   if (Object.keys(errors).length) return NextResponse.json({ error: "Some fields need attention.", fields: errors }, { status: 422 });
 
-  const serviceNames = e.services.map((s) => SOLUTIONS.find((x) => x.slug === s)?.title ?? s);
+  const serviceNames = e.services.map((s) => SERVICE_OPTIONS.find((x) => x.slug === s)?.title ?? s);
+  const kitName = e.kit ? KIT_OPTIONS.find((k) => k.slug === e.kit)?.title : undefined;
 
   // ── 2. Supabase ──────────────────────────────────────────
   const sbUrl = process.env.SUPABASE_URL;
@@ -73,8 +71,7 @@ export async function POST(req: Request) {
         org_type: e.orgType,
         services: e.services,
         location: e.location,
-        scale: e.scale || null,
-        timeline: e.timeline || null,
+        kit: e.kit || null,
         message: e.message,
         source_ip: ip,
         user_agent: req.headers.get("user-agent")?.slice(0, 300) ?? null,
@@ -93,37 +90,19 @@ export async function POST(req: Request) {
   const to = process.env.ENQUIRY_TO;
   const from = process.env.ENQUIRY_FROM || `${SITE.name} <onboarding@resend.dev>`;
   if (rk && to) {
-    const rows: [string, string][] = [
-      ["Name", e.name], ["Email", e.email], ["Phone", e.phone || "—"], ["Organisation", e.organisation || "—"],
-      ["Type", e.orgType], ["Needs", serviceNames.join(", ")], ["Location", e.location],
-      ["Scale", e.scale || "—"], ["Timeline", e.timeline || "—"],
-    ];
-    const team = `
-      <div style="font-family:Arial,sans-serif;color:#15171B;max-width:560px">
-        <h2 style="font-weight:500;margin:0 0 4px">New enquiry${reference ? ` ${esc(reference)}` : ""}</h2>
-        <p style="color:#585C63;margin:0 0 20px">${esc(e.name)} · ${esc(e.location)}</p>
-        <table style="border-collapse:collapse;width:100%;font-size:14px">${rows
-          .map(([k, v]) => `<tr><td style="padding:8px 0;border-top:1px solid #E7E4DD;color:#585C63;width:130px">${k}</td><td style="padding:8px 0;border-top:1px solid #E7E4DD">${esc(v)}</td></tr>`)
-          .join("")}</table>
-        <p style="white-space:pre-wrap;margin-top:20px;font-size:15px;line-height:1.5">${esc(e.message)}</p>
-      </div>`;
-    const confirm = `
-      <div style="font-family:Arial,sans-serif;color:#15171B;max-width:520px;font-size:15px;line-height:1.55">
-        <p>Hi ${esc(e.name.split(" ")[0])},</p>
-        <p>Thanks for contacting ${SITE.name}. We've received your enquiry about ${esc(serviceNames.join(", ").toLowerCase())} in ${esc(e.location)}${reference ? ` (reference ${esc(reference)})` : ""}.</p>
-        <p>A traffic engineer will reply within two working days. For a signal fault, call our 24/7 line on ${SITE.faultLine}.</p>
-        <p>— The ${SITE.name} team</p>
-      </div>`;
+    const data = { ...e, kit: kitName, services: serviceNames, reference: reference || undefined, receivedAt: new Date() };
+    const team = teamEnquiryEmail(data);
+    const confirm = customerConfirmationEmail(data);
 
     const send = (body: object) =>
       fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${rk}`, "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
-    const r = await send({ from, to: to.split(",").map((s) => s.trim()), reply_to: e.email, subject: `New enquiry: ${e.organisation || e.name} — ${serviceNames[0]}`, html: team });
+    const r = await send({ from, to: to.split(",").map((s) => s.trim()), reply_to: e.email, subject: team.subject, html: team.html, text: team.text });
     if (!r.ok) {
       console.error("[enquiry] resend team email failed", r.status, await r.text());
       if (!reference) return NextResponse.json({ error: `We couldn't send your enquiry just now. Please email ${SITE.email} instead.` }, { status: 502 });
     }
-    await send({ from, to: [e.email], subject: `We've received your enquiry${reference ? ` (${reference})` : ""}`, html: confirm }).catch(() => {});
+    await send({ from, to: [e.email], reply_to: process.env.ENQUIRY_REPLY_TO || to.split(",")[0].trim(), subject: confirm.subject, html: confirm.html, text: confirm.text }).catch(() => {});
   }
 
   if (!sbUrl && !rk) console.log("[enquiry] (no Supabase or Resend keys set — logged only)", e);

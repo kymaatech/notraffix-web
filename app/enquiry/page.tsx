@@ -1,13 +1,13 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { SITE } from "@/lib/site";
+import { SITE, fullAddress, tel, whatsappLink } from "@/lib/site";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { Photo } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Make an enquiry", description: `Tell ${SITE.name} about your junction, corridor or work zone.` };
 
 const NEXT = [
-  "A traffic engineer reads your enquiry and replies within two working days.",
+  `Our customer service team reads your enquiry and replies ${SITE.replyTime}.`,
   "We agree a site visit and count the traffic at the times that matter.",
   "You get a written proposal with layout, phasing, cost and timeline.",
 ];
@@ -36,9 +36,14 @@ export default function EnquiryPage() {
                 <a href={`mailto:${SITE.email}`} className="text-white hover:underline">{SITE.email}</a>
               </div>
               <div>
-                <p className="text-white/50">Signal fault, 24/7</p>
-                <a href={`tel:${SITE.faultLine.replace(/\s/g, "")}`} className="text-signal hover:underline">{SITE.faultLine}</a>
+                <p className="text-white/50">Phone and WhatsApp</p>
+                <a href={tel(SITE.phone)} className="text-white hover:underline">{SITE.phone}</a>
               </div>
+              <div className="sm:col-span-2">
+                <p className="text-white/50">Office, {SITE.hours}</p>
+                <address className="not-italic text-white/80">{fullAddress()}</address>
+              </div>
+              <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn-glass sm:col-span-2 sm:justify-self-start">Chat on WhatsApp</a>
             </div>
           </div>
         </aside>

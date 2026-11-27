@@ -7,4 +7,7 @@ node_modules
 .snapshot.tgz
 # stand-in media is downloaded at dev/build time by scripts/fetch-media.mjs
 # (delete this line once the client's own media is added and should be committed)
-public/media
+public/media/*
+# committed: compressed hero loop (14 s, 720p, no audio)
+!public/media/hero-roundabout-lite.mp4
+!public/media/client-*.jpg

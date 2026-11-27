@@ -114,7 +114,7 @@ export const SOLUTIONS: Solution[] = [
     intro:
       "Bay sensors and entry counts track every car park and kerbside zone. Signs at decision points and a live map guide drivers to free spaces, cutting the traffic made by people searching for a bay.",
     image: "parking",
-    gallery: ["congestion", "lagosRoad"],
+    gallery: ["lagosTraffic2", "lagosTraffic1"],
     features: [
       { title: "Occupancy detection", text: "Per-bay sensors or entry and exit counts for any car park." },
       { title: "Guidance signs", text: "LED signs showing live availability at every decision point." },
@@ -130,7 +130,7 @@ export const PROCESS: { title: string; text: string; image: MediaKey }[] = [
   { title: "Survey", text: "We count, film and model the junction to see where the time is actually lost.", image: "streetAerial" },
   { title: "Design", text: "Signal layout, phasing and timing plans, signed off with the road authority.", image: "wiring" },
   { title: "Install", text: "Civil works, cabling and commissioning, scheduled around traffic.", image: "crews" },
-  { title: "Operate", text: "24/7 monitoring, regular re-timing and a fault line that answers.", image: "controlPoster" },
+  { title: "Maintain", text: "Monitoring, regular re-timing and maintenance that keep the junction performing.", image: "controlPoster" },
 ];
 
 /* PLACEHOLDER projects — replace with the client's real references before launch. */
